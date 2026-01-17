@@ -166,4 +166,16 @@ router.get('/artist/:artistId', async (req, res) => {
   }
 });
 
+// @route   GET /api/artworks/categories/list
+// @desc    Get all unique categories
+// @access  Public
+router.get('/categories/list', async (req, res) => {
+  try {
+    const categories = await Artwork.distinct('category');
+    res.json(categories);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = router;
