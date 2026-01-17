@@ -1,0 +1,202 @@
+.user-orders-container {
+  width: 100%;
+}
+
+.user-orders-container h1 {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 2rem;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #f5c6cb;
+}
+
+.no-orders {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.no-orders p {
+  font-size: 1.2rem;
+  color: #7f8c8d;
+  margin-bottom: 1.5rem;
+}
+
+.browse-btn {
+  display: inline-block;
+  background-color: #3498db;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.browse-btn:hover {
+  background-color: #2980b9;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.order-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s;
+}
+
+.order-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.order-header h3 {
+  font-size: 1.3rem;
+  color: #2c3e50;
+  margin-bottom: 0.3rem;
+}
+
+.order-date {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.status-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.status-pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-confirmed {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.status-sold {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.order-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.order-artwork {
+  display: flex;
+  gap: 1.5rem;
+  flex: 1;
+  min-width: 300px;
+}
+
+.order-image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.placeholder-image {
+  width: 120px;
+  height: 120px;
+  background-color: #ecf0f1;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #95a5a6;
+}
+
+.artwork-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.artwork-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  transition: color 0.2s;
+}
+
+.artwork-title:hover {
+  color: #3498db;
+}
+
+.artist-name {
+  color: #7f8c8d;
+  font-size: 0.95rem;
+}
+
+.category {
+  color: #3498db;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.order-amount {
+  text-align: right;
+  min-width: 150px;
+}
+
+.amount-label {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.amount-value {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #27ae60;
+}
+
+@media (max-width: 768px) {
+  .order-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .order-amount {
+    text-align: left;
+    width: 100%;
+  }
+
+  .order-artwork {
+    width: 100%;
+  }
+}

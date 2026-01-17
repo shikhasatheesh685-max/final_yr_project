@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ordersAPI } from '../utils/api';
+import LoadingSpinner from '../components/LoadingSpinner';
 import './AdminSales.css';
 
 const AdminSales = () => {
@@ -25,7 +26,7 @@ const AdminSales = () => {
   };
 
   if (loading) {
-    return <div className="loading-container">Loading sales report...</div>;
+    return <LoadingSpinner message="Loading sales report..." />;
   }
 
   if (error) {

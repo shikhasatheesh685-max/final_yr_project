@@ -29,13 +29,28 @@ const Register = () => {
     setError('');
 
     // Validation
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+    if (!formData.name.trim()) {
+      setError('Please enter your name');
+      return;
+    }
+
+    if (!formData.email.trim()) {
+      setError('Please enter your email');
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      setError('Please enter a valid email address');
       return;
     }
 
     if (formData.password.length < 6) {
       setError('Password must be at least 6 characters');
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
       return;
     }
 

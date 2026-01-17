@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { usersAPI } from '../utils/api';
+import LoadingSpinner from '../components/LoadingSpinner';
 import './AdminUsers.css';
 
 const AdminUsers = () => {
@@ -51,7 +52,7 @@ const AdminUsers = () => {
   };
 
   if (loading) {
-    return <div className="loading-container">Loading users...</div>;
+    return <LoadingSpinner message="Loading users..." />;
   }
 
   const getRoleBadgeClass = (role) => {

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { usersAPI, artworksAPI, ordersAPI } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import LoadingSpinner from '../components/LoadingSpinner';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
@@ -36,7 +37,7 @@ const AdminDashboard = () => {
   };
 
   if (loading) {
-    return <div className="loading-container">Loading dashboard...</div>;
+    return <LoadingSpinner message="Loading dashboard..." />;
   }
 
   return (

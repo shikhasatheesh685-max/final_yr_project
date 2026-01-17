@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { artworksAPI } from '../utils/api';
+import LoadingSpinner from '../components/LoadingSpinner';
 import './UploadArtwork.css';
 
 const EditArtwork = () => {
@@ -71,13 +72,34 @@ const EditArtwork = () => {
     setError('');
     setMessage('');
 
-    if (!formData.title || !formData.description || !formData.price || !formData.category) {
-      setError('Please fill in all fields');
+    // Validation
+    if (!formData.title.trim()) {
+      setError('Please enter a title');
       return;
     }
 
-    if (isNaN(formData.price) || parseFloat(formData.price) <= 0) {
-      setError('Please enter a valid price');
+    if (!formData.description.trim()) {
+      setError('Please enter a description');
+      return;
+    }
+
+    if (formData.description.trim().length < 10) {
+      setError('Description must be at least 10 characters');
+      return;
+    }
+
+    if (!formData.price || isNaN(formData.price) || parseFloat(formData.price) <= 0) {
+      setError('Please enter a valid price (greater than 0)');
+      return;
+    }
+
+    if (!formData.category.trim()) {
+      setError('Please enter a category');
+      return;
+    }
+
+    if (image && image.size > 5 * 1024 * 1024) {
+      setError('Image size must be less than 5MB');
       return;
     }
 
@@ -107,7 +129,7 @@ const EditArtwork = () => {
   };
 
   if (fetching) {
-    return <div className="loading-container">Loading artwork...</div>;
+    return <LoadingSpinner message="Loading artwork..." />;
   }
 
   return (

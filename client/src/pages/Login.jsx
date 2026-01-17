@@ -24,6 +24,23 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    
+    // Validation
+    if (!formData.email.trim()) {
+      setError('Please enter your email');
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    if (!formData.password) {
+      setError('Please enter your password');
+      return;
+    }
+
     setLoading(true);
 
     const result = await login(formData.email, formData.password);

@@ -16,6 +16,8 @@ import AdminUsers from './pages/AdminUsers';
 import AdminArtworks from './pages/AdminArtworks';
 import AdminOrders from './pages/AdminOrders';
 import AdminSales from './pages/AdminSales';
+import UserOrders from './pages/UserOrders';
+import NotFound from './pages/NotFound';
 import './App.css';
 
 function App() {
@@ -114,15 +116,18 @@ function App() {
               }
             />
             
-            {/* Placeholder routes for future pages */}
+            {/* User Orders Route */}
             <Route
               path="/orders"
               element={
                 <ProtectedRoute>
-                  <div>Orders Page - Coming Soon</div>
+                  <UserOrders />
                 </ProtectedRoute>
               }
             />
+            
+            {/* 404 Route */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
       </div>

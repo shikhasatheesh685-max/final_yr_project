@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { artworksAPI, ordersAPI } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import LoadingSpinner from '../components/LoadingSpinner';
 import './ArtworkDetail.css';
 
 const ArtworkDetail = () => {
@@ -60,7 +61,7 @@ const ArtworkDetail = () => {
   };
 
   if (loading) {
-    return <div className="loading-container">Loading...</div>;
+    return <LoadingSpinner message="Loading artwork..." />;
   }
 
   if (!artwork) {

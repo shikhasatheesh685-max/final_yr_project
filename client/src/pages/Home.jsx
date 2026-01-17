@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { artworksAPI } from '../utils/api';
+import LoadingSpinner from '../components/LoadingSpinner';
 import './Home.css';
 
 const Home = () => {
@@ -98,7 +99,7 @@ const Home = () => {
       </div>
 
       {loading ? (
-        <div className="loading">Loading artworks...</div>
+        <LoadingSpinner message="Loading artworks..." />
       ) : artworks.length === 0 ? (
         <div className="no-artworks">No artworks found</div>
       ) : (

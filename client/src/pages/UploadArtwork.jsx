@@ -43,8 +43,28 @@ const UploadArtwork = () => {
     setMessage('');
 
     // Validation
-    if (!formData.title || !formData.description || !formData.price || !formData.category) {
-      setError('Please fill in all fields');
+    if (!formData.title.trim()) {
+      setError('Please enter a title');
+      return;
+    }
+
+    if (!formData.description.trim()) {
+      setError('Please enter a description');
+      return;
+    }
+
+    if (formData.description.trim().length < 10) {
+      setError('Description must be at least 10 characters');
+      return;
+    }
+
+    if (!formData.price || isNaN(formData.price) || parseFloat(formData.price) <= 0) {
+      setError('Please enter a valid price (greater than 0)');
+      return;
+    }
+
+    if (!formData.category.trim()) {
+      setError('Please enter a category');
       return;
     }
 
@@ -53,8 +73,9 @@ const UploadArtwork = () => {
       return;
     }
 
-    if (isNaN(formData.price) || parseFloat(formData.price) <= 0) {
-      setError('Please enter a valid price');
+    // Check file size (5MB limit)
+    if (image.size > 5 * 1024 * 1024) {
+      setError('Image size must be less than 5MB');
       return;
     }
 

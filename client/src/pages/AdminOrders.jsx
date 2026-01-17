@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ordersAPI } from '../utils/api';
+import LoadingSpinner from '../components/LoadingSpinner';
 import './AdminOrders.css';
 
 const AdminOrders = () => {
@@ -36,7 +37,7 @@ const AdminOrders = () => {
   };
 
   if (loading) {
-    return <div className="loading-container">Loading orders...</div>;
+    return <LoadingSpinner message="Loading orders..." />;
   }
 
   const getStatusBadgeClass = (status) => {
