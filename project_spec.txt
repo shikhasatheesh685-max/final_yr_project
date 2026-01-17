@@ -1,0 +1,93 @@
+Art gallery showcase
+
+1. PROJECT OVERVIEW
+-------------------
+Project Title: Art gallery showcase
+Tech Stack: MERN (MongoDB, Express, React, Node.js)
+
+2. PROBLEM STATEMENT
+--------------------
+The current Art Gallery system follows a manual method for managing artworks, artist details, and exhibitions. This manual system creates several problems that affect efficiency, accuracy, and accessibility.
+Manual record keeping of artwork and artist information often leads to data loss, duplication, and human errors.
+Physical registers and files make searching, updating, and maintaining records time-consuming.
+Limited physical space restricts the number of artworks that can be displayed at a time.
+Visitors must be physically present, which limits reach and accessibility.
+Managing exhibitions manually increases workload and operational complexity.
+Lack of a digital platform results in poor interaction between artists and visitors.
+Due to these drawbacks, the existing manual system is inefficient and outdated. Hence, there is a need for a web-based Art Gallery Showcase system that provides secure data storage, easy access, efficient management, and improved user interaction.
+3. PROPOSED SOLUTION
+--------------------
+The proposed system is a web-based Art Gallery Showcase designed to overcome the limitations of the existing manual art gallery system. It provides a centralized digital platform for managing artworks, artists, and exhibitions efficiently.
+In the proposed system, artists can register and upload their artworks along with relevant details such as title, category, medium, and description. All artwork information is stored securely in a database, eliminating issues related to data loss and manual record keeping. Visitors can access the gallery online to browse artworks, view artist profiles, and explore exhibitions without geographical restrictions.
+The system includes an administrative module that allows the admin to manage users, approve artworks, organize exhibitions, and maintain gallery records. Searching, filtering, and categorization features make it easier for users to find artworks quickly. The proposed system reduces manual effort, improves accuracy, and enhances user interaction by providing a structured and user-friendly interface.
+Overall, the proposed system offers better accessibility, efficient data management, improved security, and a modern digital experience compared to the traditional manual system.
+4. USER ROLES & PERMISSIONS
+---------------------------
+A. Artist:
+•	Can Register and Login.
+•	Can Upload new artworks (Title, Description, Price, Image).
+•	Can Edit or Delete their artworks.
+•	Can View sales status of their artworks.
+B. Visitor / Customer:
+•	Can View artworks without login.
+•	Can Register and Login to purchase artworks.
+•	Can Browse artworks by category or artist.
+•	Can Place orders and view order history.
+C. Sales
+•	View all sales transactions.
+•	Track sold artworks and total revenue.
+•	Generate sales reports for admin review.
+D. Artwork Display
+•	Manage how artworks appear on the gallery page.
+•	Arrange artworks by category, popularity, or featured status.
+•	Control visibility of artworks (featured, hidden, or available).
+E. Admin:
+•	Can Login to secure admin dashboard.
+•	Can Approve or Manage artist accounts.
+•	Can Add/Edit/Delete artworks.
+•	Can View all orders and sales reports.
+•	Can Manage categories and featured artworks.
+
+
+
+5. DATABASE STRUCTURE (Schemas)
+-------------------------------
+A. User Schema:
+•	Name (String)
+•	Email (String, Unique)
+•	Password (Hashed)
+•	Role (String: artist, visitor, admin)
+B. Artwork Schema:
+•	Title (String)
+•	Description (String)
+•	Price (Number)
+•	Category (String)
+•	ImageURL (String)
+•	ArtistID (Reference to User)
+•	IsAvailable (Boolean, Default: true)
+C. Order Schema:
+•	UserID (Reference to User)
+•	ArtworkID (Reference to Artwork)
+•	TotalAmount (Number)
+•	OrderStatus (String: Pending, Confirmed, Sold)
+•	CreatedAt (Timestamp)
+
+6. FEATURE WORKFLOW (The "User Journey")
+----------------------------------------
+•  Artist logs in and uploads artwork.
+•  Artwork is stored in the database and displayed on the gallery page.
+•  Visitor browses artworks on the website.
+•  Visitor selects an artwork and places an order.
+•  Order is stored in the database with status Pending.
+•  Admin reviews and confirms the order.
+•  Order status changes to Sold.
+•  Artist and customer are notified of the sale.
+
+7. API ENDPOINTS (The URL Rules)
+--------------------------------
+* POST /api/auth/register   -> Create new user
+* POST /api/auth/login      -> Login user
+* GET  /api/items           -> Get list of items
+* POST /api/items           -> Create new item
+* PUT  /api/items/:id       -> Update item (Admin only)
+* DELETE /api/items/:id     -> Delete item (Admin only)
