@@ -12,27 +12,70 @@ const Register = () => {
     role: 'visitor',
   });
   const [error, setError] = useState('');
+  const [nameError, setNameError] = useState('');
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
 
+  // Validate name field
+  const validateName = (name) => {
+    const trimmedName = name.trim();
+    
+    if (!trimmedName) {
+      return 'Name is required';
+    }
+    
+    if (trimmedName.length < 3) {
+      return 'Name must be at least 3 characters long';
+    }
+    
+    if (trimmedName.length > 30) {
+      return 'Name must not exceed 30 characters';
+    }
+    
+    // Check if name contains only alphabetic characters and spaces
+    if (!/^[a-zA-Z\s]+$/.test(trimmedName)) {
+      return 'Name can only contain alphabetic characters and spaces';
+    }
+    
+    return '';
+  };
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
+    
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+    
+    // Clear general error when user types
     setError('');
+    
+    // Validate name field in real-time
+    if (name === 'name') {
+      const validationError = validateName(value);
+      setNameError(validationError);
+    }
+  };
+
+  const handleNameBlur = (e) => {
+    const validationError = validateName(e.target.value);
+    setNameError(validationError);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    // Validation
-    if (!formData.name.trim()) {
-      setError('Please enter your name');
+    // Validate name field
+    const nameValidationError = validateName(formData.name);
+    if (nameValidationError) {
+      setNameError(nameValidationError);
       return;
     }
+    
+    setNameError('');
 
     if (!formData.email.trim()) {
       setError('Please enter your email');
@@ -94,8 +137,16 @@ const Register = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
+              onBlur={handleNameBlur}
+              className={nameError ? 'error' : ''}
               required
+              minLength={3}
+              maxLength={30}
+              pattern="[a-zA-Z\s]+"
             />
+            {nameError && (
+              <span className="field-error">{nameError}</span>
+            )}
           </div>
 
           <div className="form-group">
