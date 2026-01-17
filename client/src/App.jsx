@@ -1,10 +1,16 @@
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import ArtworkDetail from './pages/ArtworkDetail';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ArtistDashboard from './pages/ArtistDashboard';
+import UploadArtwork from './pages/UploadArtwork';
+import MyArtworks from './pages/MyArtworks';
+import EditArtwork from './pages/EditArtwork';
+import ArtistSales from './pages/ArtistSales';
 import './App.css';
 
 function App() {
@@ -18,9 +24,58 @@ function App() {
             <Route path="/artwork/:id" element={<ArtworkDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            
+            {/* Artist Routes */}
+            <Route
+              path="/artist/dashboard"
+              element={
+                <ProtectedRoute requiredRole="artist">
+                  <ArtistDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/artist/upload"
+              element={
+                <ProtectedRoute requiredRole="artist">
+                  <UploadArtwork />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/artist/artworks"
+              element={
+                <ProtectedRoute requiredRole="artist">
+                  <MyArtworks />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/artist/artworks/edit/:id"
+              element={
+                <ProtectedRoute requiredRole="artist">
+                  <EditArtwork />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/artist/sales"
+              element={
+                <ProtectedRoute requiredRole="artist">
+                  <ArtistSales />
+                </ProtectedRoute>
+              }
+            />
+            
             {/* Placeholder routes for future pages */}
-            <Route path="/orders" element={<div>Orders Page - Coming Soon</div>} />
-            <Route path="/artist/dashboard" element={<div>Artist Dashboard - Coming Soon</div>} />
+            <Route
+              path="/orders"
+              element={
+                <ProtectedRoute>
+                  <div>Orders Page - Coming Soon</div>
+                </ProtectedRoute>
+              }
+            />
             <Route path="/admin" element={<div>Admin Dashboard - Coming Soon</div>} />
           </Routes>
         </main>
