@@ -70,4 +70,12 @@ export const ordersAPI = {
   getSalesReport: () => api.get('/orders/admin/sales-report'),
 };
 
+// Users API (Admin only)
+export const usersAPI = {
+  getAll: () => api.get('/users'),
+  getStats: () => api.get('/users/stats'),
+  updateRole: (id, role) => api.put(`/users/${id}/role`, { role }),
+  delete: (id) => api.delete(`/users/${id}`),
+};
+
 export default api;

@@ -11,6 +11,11 @@ import UploadArtwork from './pages/UploadArtwork';
 import MyArtworks from './pages/MyArtworks';
 import EditArtwork from './pages/EditArtwork';
 import ArtistSales from './pages/ArtistSales';
+import AdminDashboard from './pages/AdminDashboard';
+import AdminUsers from './pages/AdminUsers';
+import AdminArtworks from './pages/AdminArtworks';
+import AdminOrders from './pages/AdminOrders';
+import AdminSales from './pages/AdminSales';
 import './App.css';
 
 function App() {
@@ -67,6 +72,48 @@ function App() {
               }
             />
             
+            {/* Admin Routes */}
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminUsers />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/artworks"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminArtworks />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/orders"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminOrders />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/sales"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminSales />
+                </ProtectedRoute>
+              }
+            />
+            
             {/* Placeholder routes for future pages */}
             <Route
               path="/orders"
@@ -76,7 +123,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="/admin" element={<div>Admin Dashboard - Coming Soon</div>} />
           </Routes>
         </main>
       </div>
