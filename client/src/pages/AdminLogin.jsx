@@ -1,21 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { authAPI } from '../utils/api';
 import './Auth.css';
 
 /**
- * Separate admin login – not linked from public navbar.
- * Only users with role 'admin' are allowed; others are redirected with an error.
+ * Separate admin login – only users with role 'admin' are allowed.
+ * Ensures default admin exists so credentials work without running seed manually.
  */
 const AdminLogin = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: 'admin@artgallery.com',
+    password: 'admin123',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [ensureDone, setEnsureDone] = useState(false);
   const { login, logout } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    authAPI.ensureAdmin()
+      .then(() => setEnsureDone(true))
+      .catch(() => setEnsureDone(true));
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -68,7 +76,17 @@ const AdminLogin = () => {
     <div className="auth-container">
       <div className="auth-card admin-login-card">
         <h2>Admin Login</h2>
-        <p className="admin-login-hint">Administrator access only. Use your admin account.</p>
+        <p className="admin-login-hint">Administrator access only. Use the credentials below.</p>
+
+        {ensureDone && (
+          <div className="default-credentials-box">
+            <strong>Default credentials</strong>
+            <p>Email: <code>admin@artgallery.com</code></p>
+            <p>Password: <code>admin123</code></p>
+            <p className="default-credentials-note">If this is your first time, the default admin is created automatically.</p>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit}>
           {error && <div className="error-message">{error}</div>}
 

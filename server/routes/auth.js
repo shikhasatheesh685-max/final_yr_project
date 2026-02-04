@@ -116,4 +116,41 @@ router.get('/me', protect, async (req, res) => {
   }
 });
 
+// @route   GET /api/auth/ensure-admin
+// @desc    Create default admin if no admin exists (for easy demo/evaluation). No auth required.
+// @access  Public
+router.get('/ensure-admin', async (req, res) => {
+  try {
+    const adminCount = await User.countDocuments({ role: 'admin' });
+    if (adminCount > 0) {
+      return res.json({ created: false, message: 'Admin already exists' });
+    }
+
+    let admin = await User.findOne({ email: 'admin@artgallery.com' });
+    if (admin) {
+      admin.role = 'admin';
+      await admin.save();
+      return res.json({ created: true, email: 'admin@artgallery.com', message: 'Existing user set as admin' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash('admin123', salt);
+    await User.create({
+      name: 'Admin',
+      email: 'admin@artgallery.com',
+      password: hashedPassword,
+      role: 'admin',
+      isApproved: true,
+    });
+
+    res.json({
+      created: true,
+      email: 'admin@artgallery.com',
+      message: 'Default admin created. Use email: admin@artgallery.com, password: admin123',
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = router;

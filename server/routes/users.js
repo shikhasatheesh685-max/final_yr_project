@@ -93,6 +93,43 @@ router.put('/:id/reject', protect, authorize('admin'), async (req, res) => {
   }
 });
 
+// @route   PUT /api/users/:id
+// @desc    Update user details - name, email (Admin only). Full control over other users.
+// @access  Private (Admin only)
+router.put('/:id', protect, authorize('admin'), async (req, res) => {
+  try {
+    const { name, email } = req.body;
+
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Prevent admin from changing their own email to avoid lockout (optional: allow name)
+    const isSelf = user._id.toString() === req.user._id.toString();
+
+    if (name != null && name.trim()) {
+      user.name = name.trim();
+    }
+
+    if (email != null && email.trim()) {
+      const emailTaken = await User.findOne({ email: email.trim(), _id: { $ne: req.params.id } });
+      if (emailTaken) {
+        return res.status(400).json({ message: 'Email already in use' });
+      }
+      user.email = email.trim();
+    }
+
+    await user.save();
+
+    const updatedUser = await User.findById(user._id).select('-password');
+    res.json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // @route   PUT /api/users/:id/role
 // @desc    Update user role (Admin only)
 // @access  Private (Admin only)

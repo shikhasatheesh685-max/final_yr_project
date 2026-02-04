@@ -99,9 +99,11 @@ const Login = () => {
         <p className="auth-link">
           Don't have an account? <Link to="/register">Register here</Link>
         </p>
-        <p className="auth-link auth-link-admin">
-          Admin? <Link to="/admin/login">Sign in here</Link>
-        </p>
+
+        <div className="admin-login-box">
+          <span className="admin-login-label">Administrator?</span>
+          <Link to="/admin/login" className="admin-login-link">Go to Admin Login</Link>
+        </div>
       </div>
     </div>
   );

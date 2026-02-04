@@ -7,6 +7,8 @@ const AdminUsers = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
+  const [editingUser, setEditingUser] = useState(null);
+  const [editForm, setEditForm] = useState({ name: '', email: '' });
 
   useEffect(() => {
     fetchUsers();
@@ -61,6 +63,24 @@ const AdminUsers = () => {
     }
   };
 
+  const handleEditClick = (user) => {
+    setEditingUser(user);
+    setEditForm({ name: user.name, email: user.email });
+  };
+
+  const handleEditSave = async () => {
+    if (!editingUser) return;
+    try {
+      setMessage('');
+      await usersAPI.update(editingUser._id, { name: editForm.name.trim(), email: editForm.email.trim() });
+      setMessage('User updated successfully');
+      setEditingUser(null);
+      fetchUsers();
+    } catch (error) {
+      setMessage(error.response?.data?.message || 'Failed to update user');
+    }
+  };
+
   const handleDelete = async (userId) => {
     if (!window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
       return;
@@ -94,6 +114,35 @@ const AdminUsers = () => {
   return (
     <div className="admin-users-container">
       <h1>Manage Users</h1>
+      <p className="admin-users-hint">Admin has full control: edit name/email, change role, approve/reject artists, and delete users.</p>
+
+      {editingUser && (
+        <div className="edit-user-modal-overlay" onClick={() => setEditingUser(null)}>
+          <div className="edit-user-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>Edit User</h3>
+            <div className="form-group">
+              <label>Name</label>
+              <input
+                type="text"
+                value={editForm.name}
+                onChange={(e) => setEditForm((p) => ({ ...p, name: e.target.value }))}
+              />
+            </div>
+            <div className="form-group">
+              <label>Email</label>
+              <input
+                type="email"
+                value={editForm.email}
+                onChange={(e) => setEditForm((p) => ({ ...p, email: e.target.value }))}
+              />
+            </div>
+            <div className="modal-actions">
+              <button type="button" onClick={() => setEditingUser(null)} className="cancel-btn">Cancel</button>
+              <button type="button" onClick={handleEditSave} className="save-btn">Save</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {message && (
         <div className={`message ${message.includes('success') ? 'success' : 'error'}`}>
@@ -145,6 +194,13 @@ const AdminUsers = () => {
                   </td>
                   <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                   <td>
+                    <button
+                      onClick={() => handleEditClick(user)}
+                      className="edit-user-btn"
+                      title="Edit name and email"
+                    >
+                      Edit
+                    </button>
                     {user.role === 'artist' && !user.isApproved && (
                       <button
                         onClick={() => handleApprove(user._id)}

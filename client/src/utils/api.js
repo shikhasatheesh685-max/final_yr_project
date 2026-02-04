@@ -43,6 +43,7 @@ export const authAPI = {
   register: (userData) => api.post('/auth/register', userData),
   login: (credentials) => api.post('/auth/login', credentials),
   getMe: () => api.get('/auth/me'),
+  ensureAdmin: () => api.get('/auth/ensure-admin'),
 };
 
 // Artworks API
@@ -74,6 +75,7 @@ export const ordersAPI = {
 export const usersAPI = {
   getAll: () => api.get('/users'),
   getStats: () => api.get('/users/stats'),
+  update: (id, data) => api.put(`/users/${id}`, data),
   updateRole: (id, role) => api.put(`/users/${id}/role`, { role }),
   approve: (id) => api.put(`/users/${id}/approve`),
   reject: (id) => api.put(`/users/${id}/reject`),
