@@ -21,6 +21,11 @@ const orderSchema = new mongoose.Schema({
     enum: ['Pending', 'Confirmed', 'Sold'],
     default: 'Pending',
   },
+  commissionAmount: {
+    type: Number,
+    default: 0,
+    min: 0,
+  },
 }, {
   timestamps: true,
 });

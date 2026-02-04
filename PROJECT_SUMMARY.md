@@ -62,6 +62,7 @@ All 7 phases have been successfully implemented:
 - ✅ Browse artworks without login
 - ✅ Filter by category, featured, availability
 - ✅ View detailed artwork information
+- ✅ Browse artworks by artist (Artist Profile page at `/artist/:id`)
 - ✅ User registration and login
 
 ### Artist Features

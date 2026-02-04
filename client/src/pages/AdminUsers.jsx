@@ -36,6 +36,31 @@ const AdminUsers = () => {
     }
   };
 
+  const handleApprove = async (userId) => {
+    try {
+      setMessage('');
+      await usersAPI.approve(userId);
+      setMessage('Artist approved successfully');
+      fetchUsers();
+    } catch (error) {
+      setMessage(error.response?.data?.message || 'Failed to approve artist');
+    }
+  };
+
+  const handleReject = async (userId) => {
+    if (!window.confirm('Revoke approval for this artist? They will not be able to upload or manage artworks until approved again.')) {
+      return;
+    }
+    try {
+      setMessage('');
+      await usersAPI.reject(userId);
+      setMessage('Artist approval revoked');
+      fetchUsers();
+    } catch (error) {
+      setMessage(error.response?.data?.message || 'Failed to reject artist');
+    }
+  };
+
   const handleDelete = async (userId) => {
     if (!window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
       return;
@@ -86,6 +111,7 @@ const AdminUsers = () => {
                 <th>Name</th>
                 <th>Email</th>
                 <th>Role</th>
+                <th>Status</th>
                 <th>Created</th>
                 <th>Actions</th>
               </tr>
@@ -106,8 +132,35 @@ const AdminUsers = () => {
                       <option value="admin">Admin</option>
                     </select>
                   </td>
+                  <td>
+                    {user.role === 'artist' ? (
+                      user.isApproved ? (
+                        <span className="status-badge approved">Approved</span>
+                      ) : (
+                        <span className="status-badge pending">Pending</span>
+                      )
+                    ) : (
+                      '—'
+                    )}
+                  </td>
                   <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                   <td>
+                    {user.role === 'artist' && !user.isApproved && (
+                      <button
+                        onClick={() => handleApprove(user._id)}
+                        className="approve-btn"
+                      >
+                        Approve
+                      </button>
+                    )}
+                    {user.role === 'artist' && user.isApproved && (
+                      <button
+                        onClick={() => handleReject(user._id)}
+                        className="reject-btn"
+                      >
+                        Reject
+                      </button>
+                    )}
                     <button
                       onClick={() => handleDelete(user._id)}
                       className="delete-btn"

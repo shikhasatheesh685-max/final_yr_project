@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import ArtworkDetail from './pages/ArtworkDetail';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import AdminLogin from './pages/AdminLogin';
 import ArtistDashboard from './pages/ArtistDashboard';
 import UploadArtwork from './pages/UploadArtwork';
 import MyArtworks from './pages/MyArtworks';
@@ -16,7 +17,11 @@ import AdminUsers from './pages/AdminUsers';
 import AdminArtworks from './pages/AdminArtworks';
 import AdminOrders from './pages/AdminOrders';
 import AdminSales from './pages/AdminSales';
+import AdminCategories from './pages/AdminCategories';
+import AdminSiteContent from './pages/AdminSiteContent';
+import AdminReports from './pages/AdminReports';
 import UserOrders from './pages/UserOrders';
+import ArtistProfile from './pages/ArtistProfile';
 import NotFound from './pages/NotFound';
 import './App.css';
 
@@ -29,8 +34,10 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/artwork/:id" element={<ArtworkDetail />} />
+            <Route path="/artist/:id" element={<ArtistProfile />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
             
             {/* Artist Routes */}
             <Route
@@ -112,6 +119,30 @@ function App() {
               element={
                 <ProtectedRoute requiredRole="admin">
                   <AdminSales />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/categories"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminCategories />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/site-content"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminSiteContent />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/reports"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminReports />
                 </ProtectedRoute>
               }
             />

@@ -28,6 +28,7 @@ const AdminDashboard = () => {
         totalArtworks: artworksRes.data.length,
         totalOrders: ordersRes.data.stats?.totalOrders || 0,
         totalRevenue: ordersRes.data.stats?.totalRevenue || 0,
+        totalCommission: ordersRes.data.stats?.totalCommission || 0,
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
@@ -73,6 +74,10 @@ const AdminDashboard = () => {
             <h3>Total Revenue</h3>
             <p className="stat-value">${stats.totalRevenue?.toFixed(2) || '0.00'}</p>
           </div>
+          <div className="stat-card highlight">
+            <h3>Commission</h3>
+            <p className="stat-value">${stats.totalCommission?.toFixed(2) || '0.00'}</p>
+          </div>
         </div>
       )}
 
@@ -93,8 +98,23 @@ const AdminDashboard = () => {
         </Link>
 
         <Link to="/admin/sales" className="dashboard-link-card">
-          <h3>Sales Reports</h3>
-          <p>View detailed sales reports and analytics</p>
+          <h3>Sales & Commission</h3>
+          <p>View sales reports and platform commission</p>
+        </Link>
+
+        <Link to="/admin/categories" className="dashboard-link-card">
+          <h3>Categories</h3>
+          <p>Add, edit, and remove artwork categories</p>
+        </Link>
+
+        <Link to="/admin/site-content" className="dashboard-link-card">
+          <h3>Site Content</h3>
+          <p>Edit site name, tagline, and welcome message</p>
+        </Link>
+
+        <Link to="/admin/reports" className="dashboard-link-card">
+          <h3>Reports & Analytics</h3>
+          <p>System-wide stats and analytics</p>
         </Link>
       </div>
     </div>

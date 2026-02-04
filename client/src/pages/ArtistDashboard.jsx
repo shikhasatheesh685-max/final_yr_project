@@ -4,6 +4,7 @@ import './ArtistDashboard.css';
 
 const ArtistDashboard = () => {
   const { user } = useAuth();
+  const isApproved = user?.isApproved !== false;
 
   return (
     <div className="artist-dashboard">
@@ -12,12 +13,23 @@ const ArtistDashboard = () => {
         <p>Welcome back, {user?.name}!</p>
       </div>
 
+      {!isApproved && (
+        <div className="artist-pending-banner">
+          <strong>Pending approval</strong>
+          <p>Your artist account is awaiting approval by an administrator. You will be able to upload and manage artworks once approved.</p>
+        </div>
+      )}
+
       <div className="dashboard-stats">
         <div className="stat-card">
           <h3>Quick Actions</h3>
-          <Link to="/artist/upload" className="action-btn primary">
-            Upload New Artwork
-          </Link>
+          {isApproved ? (
+            <Link to="/artist/upload" className="action-btn primary">
+              Upload New Artwork
+            </Link>
+          ) : (
+            <span className="action-disabled">Upload (available after approval)</span>
+          )}
         </div>
       </div>
 

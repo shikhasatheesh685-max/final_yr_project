@@ -25,6 +25,13 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'Please provide name, email, and password' });
     }
 
+    // Admin cannot be created via public registration
+    const allowedRoles = ['visitor', 'artist'];
+    const finalRole = role && allowedRoles.includes(role) ? role : 'visitor';
+    if (role === 'admin') {
+      return res.status(403).json({ message: 'Admin registration is not allowed' });
+    }
+
     // Check if user exists
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -35,12 +42,16 @@ router.post('/register', async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    // Artists require admin approval before they can upload/manage artworks
+    const isApproved = finalRole === 'visitor';
+
     // Create user
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
-      role: role || 'visitor', // Default to visitor if not specified
+      role: finalRole,
+      isApproved,
     });
 
     if (user) {
@@ -49,6 +60,7 @@ router.post('/register', async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        isApproved: user.isApproved,
         token: generateToken(user._id),
       });
     } else {
@@ -75,11 +87,13 @@ router.post('/login', async (req, res) => {
     const user = await User.findOne({ email });
 
     if (user && (await bcrypt.compare(password, user.password))) {
+      const userResponse = await User.findById(user._id).select('-password');
       res.json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
+        _id: userResponse._id,
+        name: userResponse.name,
+        email: userResponse.email,
+        role: userResponse.role,
+        isApproved: userResponse.isApproved,
         token: generateToken(user._id),
       });
     } else {

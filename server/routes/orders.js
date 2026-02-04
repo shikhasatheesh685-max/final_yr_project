@@ -1,7 +1,7 @@
 const express = require('express');
 const Order = require('../models/Order');
 const Artwork = require('../models/Artwork');
-const { protect, authorize } = require('../middleware/auth');
+const { protect, authorize, requireApprovedArtist } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -32,12 +32,16 @@ router.post('/', protect, async (req, res) => {
       return res.status(400).json({ message: 'You cannot purchase your own artwork' });
     }
 
+    const commissionRate = parseFloat(process.env.COMMISSION_RATE) || 0.1;
+    const commissionAmount = Math.round(artwork.price * commissionRate * 100) / 100;
+
     // Create order
     const order = await Order.create({
       userID: req.user._id,
       artworkID: artwork._id,
       totalAmount: artwork.price,
       orderStatus: 'Pending',
+      commissionAmount,
     });
 
     // Mark artwork as unavailable
@@ -138,8 +142,8 @@ router.put('/:id/status', protect, authorize('admin'), async (req, res) => {
 
 // @route   GET /api/orders/artist/sales
 // @desc    Get sales for artist's artworks
-// @access  Private (Artist only)
-router.get('/artist/sales', protect, authorize('artist'), async (req, res) => {
+// @access  Private (Approved Artist only)
+router.get('/artist/sales', protect, authorize('artist'), requireApprovedArtist, async (req, res) => {
   try {
     // Get all artworks by this artist
     const artworks = await Artwork.find({ artistID: req.user._id });
@@ -183,24 +187,22 @@ router.get('/admin/sales-report', protect, authorize('admin'), async (req, res) 
   try {
     const allOrders = await Order.find()
       .populate('userID', 'name email')
-      .populate('artworkID')
+      .populate({ path: 'artworkID', populate: { path: 'artistID', select: 'name' } })
       .sort({ createdAt: -1 });
 
     // Calculate statistics
     const totalOrders = allOrders.length;
-    const totalRevenue = allOrders
-      .filter(order => order.orderStatus === 'Sold')
-      .reduce((sum, order) => sum + order.totalAmount, 0);
-    
-    const soldCount = allOrders.filter(order => order.orderStatus === 'Sold').length;
+    const soldOrders = allOrders.filter(order => order.orderStatus === 'Sold');
+    const totalRevenue = soldOrders.reduce((sum, order) => sum + order.totalAmount, 0);
+    const totalCommission = soldOrders.reduce((sum, order) => sum + (order.commissionAmount || 0), 0);
+
+    const soldCount = soldOrders.length;
     const pendingCount = allOrders.filter(order => order.orderStatus === 'Pending').length;
     const confirmedCount = allOrders.filter(order => order.orderStatus === 'Confirmed').length;
 
-    // Revenue by status
     const pendingRevenue = allOrders
       .filter(order => order.orderStatus === 'Pending')
       .reduce((sum, order) => sum + order.totalAmount, 0);
-    
     const confirmedRevenue = allOrders
       .filter(order => order.orderStatus === 'Confirmed')
       .reduce((sum, order) => sum + order.totalAmount, 0);
@@ -210,6 +212,7 @@ router.get('/admin/sales-report', protect, authorize('admin'), async (req, res) 
       stats: {
         totalOrders,
         totalRevenue,
+        totalCommission,
         soldCount,
         pendingCount,
         confirmedCount,

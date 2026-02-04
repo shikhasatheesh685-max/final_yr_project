@@ -43,6 +43,56 @@ router.get('/stats', protect, authorize('admin'), async (req, res) => {
   }
 });
 
+// @route   PUT /api/users/:id/approve
+// @desc    Approve artist registration (Admin only)
+// @access  Private (Admin only)
+router.put('/:id/approve', protect, authorize('admin'), async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (user.role !== 'artist') {
+      return res.status(400).json({ message: 'Only artist accounts can be approved' });
+    }
+
+    user.isApproved = true;
+    await user.save();
+
+    const updatedUser = await User.findById(user._id).select('-password');
+    res.json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// @route   PUT /api/users/:id/reject
+// @desc    Reject / revoke artist approval (Admin only)
+// @access  Private (Admin only)
+router.put('/:id/reject', protect, authorize('admin'), async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (user.role !== 'artist') {
+      return res.status(400).json({ message: 'Only artist accounts can be rejected' });
+    }
+
+    user.isApproved = false;
+    await user.save();
+
+    const updatedUser = await User.findById(user._id).select('-password');
+    res.json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // @route   PUT /api/users/:id/role
 // @desc    Update user role (Admin only)
 // @access  Private (Admin only)

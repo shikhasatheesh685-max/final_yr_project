@@ -46,4 +46,14 @@ const authorize = (...roles) => {
   };
 };
 
-module.exports = { protect, authorize };
+// Artist must be approved by admin to perform artist-only actions
+const requireApprovedArtist = (req, res, next) => {
+  if (req.user.role === 'artist' && req.user.isApproved === false) {
+    return res.status(403).json({
+      message: 'Your artist account is pending approval by the administrator.',
+    });
+  }
+  next();
+};
+
+module.exports = { protect, authorize, requireApprovedArtist };

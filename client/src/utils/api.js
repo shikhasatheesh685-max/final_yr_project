@@ -75,7 +75,24 @@ export const usersAPI = {
   getAll: () => api.get('/users'),
   getStats: () => api.get('/users/stats'),
   updateRole: (id, role) => api.put(`/users/${id}/role`, { role }),
+  approve: (id) => api.put(`/users/${id}/approve`),
+  reject: (id) => api.put(`/users/${id}/reject`),
   delete: (id) => api.delete(`/users/${id}`),
+};
+
+// Categories API (public list; admin CRUD)
+export const categoriesAPI = {
+  getAll: () => api.get('/categories'),
+  create: (name) => api.post('/categories', { name }),
+  update: (id, name) => api.put(`/categories/${id}`, { name }),
+  delete: (id) => api.delete(`/categories/${id}`),
+};
+
+// Settings / Site content (public read for hero; admin full)
+export const settingsAPI = {
+  getPublic: () => api.get('/settings/public'),
+  getAll: () => api.get('/settings'),
+  update: (data) => api.put('/settings', data),
 };
 
 export default api;

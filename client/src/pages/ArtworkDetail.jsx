@@ -37,7 +37,7 @@ const ArtworkDetail = () => {
       return;
     }
 
-    if (user.role === 'artist' && artwork.artistID._id === user._id) {
+    if (user.role === 'artist' && String(artwork.artistID?._id) === String(user._id)) {
       setMessage('You cannot purchase your own artwork');
       return;
     }
@@ -130,7 +130,7 @@ const ArtworkDetail = () => {
             {artwork.isAvailable ? (
               <>
                 {isAuthenticated ? (
-                  artwork.artistID._id !== user._id ? (
+                  String(artwork.artistID?._id) !== String(user._id) ? (
                     <button
                       onClick={handlePurchase}
                       disabled={purchasing}

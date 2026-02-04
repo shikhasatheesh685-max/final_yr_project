@@ -120,3 +120,15 @@
 .auth-link a:hover {
   color: #2980b9;
 }
+
+.auth-link-admin {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.admin-login-card .admin-login-hint {
+  text-align: center;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin: -1rem 0 1.5rem 0;
+}

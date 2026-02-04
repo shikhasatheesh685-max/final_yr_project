@@ -69,13 +69,16 @@ Frontend will run on `http://localhost:5173` (or another port)
 
 1. Open browser and go to `http://localhost:5173`
 
-2. Login as admin:
+2. **Admin login** (separate from public registration):
+   - Go to **Admin Login**: `http://localhost:5173/admin/login` (or use "Admin? Sign in here" on the main Login page)
    - Email: `admin@artgallery.com`
    - Password: `admin123`
+   - Admin role is **not** available in the public Register form; admins are created via the seed script or backend only.
 
-3. Or register a new user:
+3. Or register a new user (Visitor or Artist only):
    - Choose role: Visitor or Artist
    - Fill in the registration form
+   - **Artists** must be approved by an admin (Admin → Manage Users → Approve) before they can upload artworks
 
 ## Testing the Application
 

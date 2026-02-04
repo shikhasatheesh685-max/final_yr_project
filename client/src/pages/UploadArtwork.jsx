@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { artworksAPI } from '../utils/api';
+import { artworksAPI, categoriesAPI } from '../utils/api';
 import './UploadArtwork.css';
 
 const UploadArtwork = () => {
@@ -11,11 +11,19 @@ const UploadArtwork = () => {
     price: '',
     category: '',
   });
+  const [categories, setCategories] = useState([]);
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    categoriesAPI.getAll().then((r) => {
+      const list = Array.isArray(r.data) ? r.data.map((c) => (c.name ?? c)) : [];
+      setCategories(list);
+    }).catch(() => {});
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -160,14 +168,28 @@ const UploadArtwork = () => {
 
             <div className="form-group">
               <label>Category *</label>
-              <input
-                type="text"
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                placeholder="e.g., Painting, Sculpture, Digital"
-                required
-              />
+              {categories.length > 0 ? (
+                <select
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select category</option>
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type="text"
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
+                  placeholder="e.g., Painting, Sculpture, Digital"
+                  required
+                />
+              )}
             </div>
           </div>
 

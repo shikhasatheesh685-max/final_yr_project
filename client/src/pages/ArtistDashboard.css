@@ -17,6 +17,30 @@
   color: #7f8c8d;
 }
 
+.artist-pending-banner {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  color: #856404;
+  padding: 1.25rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.artist-pending-banner strong {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.artist-pending-banner p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.action-disabled {
+  color: #95a5a6;
+  font-size: 0.95rem;
+}
+
 .dashboard-stats {
   margin-bottom: 2rem;
 }

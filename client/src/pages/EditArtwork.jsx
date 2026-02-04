@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { artworksAPI } from '../utils/api';
+import { artworksAPI, categoriesAPI } from '../utils/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import './UploadArtwork.css';
 
 const EditArtwork = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -25,6 +26,13 @@ const EditArtwork = () => {
   useEffect(() => {
     fetchArtwork();
   }, [id]);
+
+  useEffect(() => {
+    categoriesAPI.getAll().then((r) => {
+      const list = Array.isArray(r.data) ? r.data.map((c) => (c.name ?? c)) : [];
+      setCategories(list);
+    }).catch(() => {});
+  }, []);
 
   const fetchArtwork = async () => {
     try {
@@ -179,13 +187,27 @@ const EditArtwork = () => {
 
             <div className="form-group">
               <label>Category *</label>
-              <input
-                type="text"
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                required
-              />
+              {categories.length > 0 ? (
+                <select
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select category</option>
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type="text"
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
+                  required
+                />
+              )}
             </div>
           </div>
 

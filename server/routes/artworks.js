@@ -1,6 +1,6 @@
 const express = require('express');
 const Artwork = require('../models/Artwork');
-const { protect, authorize } = require('../middleware/auth');
+const { protect, authorize, requireApprovedArtist } = require('../middleware/auth');
 const upload = require('../middleware/upload');
 
 const router = express.Router();
@@ -49,8 +49,8 @@ router.get('/:id', async (req, res) => {
 
 // @route   POST /api/artworks
 // @desc    Create new artwork
-// @access  Private (Artist or Admin)
-router.post('/', protect, authorize('artist', 'admin'), upload.single('image'), async (req, res) => {
+// @access  Private (Approved Artist or Admin)
+router.post('/', protect, authorize('artist', 'admin'), requireApprovedArtist, upload.single('image'), async (req, res) => {
   try {
     const { title, description, price, category } = req.body;
 
@@ -84,8 +84,8 @@ router.post('/', protect, authorize('artist', 'admin'), upload.single('image'), 
 
 // @route   PUT /api/artworks/:id
 // @desc    Update artwork
-// @access  Private (Artist can update own, Admin can update any)
-router.put('/:id', protect, upload.single('image'), async (req, res) => {
+// @access  Private (Approved Artist can update own, Admin can update any)
+router.put('/:id', protect, requireApprovedArtist, upload.single('image'), async (req, res) => {
   try {
     const artwork = await Artwork.findById(req.params.id);
 
@@ -129,8 +129,8 @@ router.put('/:id', protect, upload.single('image'), async (req, res) => {
 
 // @route   DELETE /api/artworks/:id
 // @desc    Delete artwork
-// @access  Private (Artist can delete own, Admin can delete any)
-router.delete('/:id', protect, async (req, res) => {
+// @access  Private (Approved Artist can delete own, Admin can delete any)
+router.delete('/:id', protect, requireApprovedArtist, async (req, res) => {
   try {
     const artwork = await Artwork.findById(req.params.id);
 

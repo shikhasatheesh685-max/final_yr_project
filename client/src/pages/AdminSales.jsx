@@ -61,6 +61,10 @@ const AdminSales = () => {
             <h3>Total Revenue</h3>
             <p className="stat-value">${stats.totalRevenue?.toFixed(2) || '0.00'}</p>
           </div>
+          <div className="stat-card highlight">
+            <h3>Total Commission</h3>
+            <p className="stat-value">${stats.totalCommission?.toFixed(2) || '0.00'}</p>
+          </div>
           <div className="stat-card">
             <h3>Pending Revenue</h3>
             <p className="stat-value">${stats.pendingRevenue?.toFixed(2) || '0.00'}</p>

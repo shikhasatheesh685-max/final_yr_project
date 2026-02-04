@@ -22,6 +22,8 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/artworks', require('./routes/artworks'));
 app.use('/api/orders', require('./routes/orders'));
+app.use('/api/categories', require('./routes/categories'));
+app.use('/api/settings', require('./routes/settings'));
 
 // Test route
 app.get('/', (req, res) => {

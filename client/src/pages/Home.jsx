@@ -1,18 +1,25 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { artworksAPI } from '../utils/api';
+import { artworksAPI, categoriesAPI, settingsAPI } from '../utils/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import './Home.css';
 
 const Home = () => {
   const [artworks, setArtworks] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [siteContent, setSiteContent] = useState({ siteName: 'Art Gallery Showcase', tagline: 'Discover beautiful artworks from talented artists' });
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     category: '',
     featured: false,
     available: true,
   });
+
+  useEffect(() => {
+    settingsAPI.getPublic().then((r) => {
+      setSiteContent({ siteName: r.data.siteName || 'Art Gallery Showcase', tagline: r.data.tagline || 'Discover beautiful artworks from talented artists' });
+    }).catch(() => {});
+  }, []);
 
   useEffect(() => {
     fetchArtworks();
@@ -38,8 +45,18 @@ const Home = () => {
 
   const fetchCategories = async () => {
     try {
+      const response = await categoriesAPI.getAll();
+      const list = Array.isArray(response.data) ? response.data.map((c) => (c.name || c)) : [];
+      if (list.length > 0) {
+        setCategories(list);
+        return;
+      }
+    } catch (error) {
+      /* use fallback */
+    }
+    try {
       const response = await artworksAPI.getCategories();
-      setCategories(response.data);
+      setCategories(response.data || []);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
@@ -55,8 +72,8 @@ const Home = () => {
   return (
     <div className="home-container">
       <div className="hero-section">
-        <h1>Art Gallery Showcase</h1>
-        <p>Discover beautiful artworks from talented artists</p>
+        <h1>{siteContent.siteName}</h1>
+        <p>{siteContent.tagline}</p>
       </div>
 
       <div className="filters-section">

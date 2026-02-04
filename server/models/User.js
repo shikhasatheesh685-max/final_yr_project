@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema({
     enum: ['artist', 'visitor', 'admin'],
     default: 'visitor',
   },
+  isApproved: {
+    type: Boolean,
+    default: true,
+  },
 }, {
   timestamps: true,
 });
