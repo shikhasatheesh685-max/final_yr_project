@@ -1,0 +1,166 @@
+.auction-detail-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.auction-detail-page .back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: #3498db;
+  text-decoration: none;
+}
+
+.auction-detail-page .back-link:hover {
+  text-decoration: underline;
+}
+
+.auction-detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .auction-detail-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.auction-image-section {
+  position: relative;
+  background: #ecf0f1;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 1;
+}
+
+.auction-image-section img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.auction-image-section .placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #95a5a6;
+}
+
+.auction-image-section .status-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.auction-image-section .status-badge.active {
+  background: #27ae60;
+  color: white;
+}
+
+.auction-image-section .status-badge.ended {
+  background: #95a5a6;
+  color: white;
+}
+
+.auction-detail-info h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.75rem;
+  color: #2c3e50;
+}
+
+.auction-detail-info .artist {
+  color: #7f8c8d;
+  margin-bottom: 1rem;
+}
+
+.auction-detail-info .current-bid {
+  color: #27ae60;
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+}
+
+.bid-form {
+  margin-top: 1.5rem;
+}
+
+.bid-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.bid-form input {
+  width: 100%;
+  max-width: 200px;
+  padding: 0.6rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.bid-form button {
+  padding: 0.6rem 1.25rem;
+  background: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.bid-form button:hover:not(:disabled) {
+  background: #219a52;
+}
+
+.auction-detail-page .message {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: 4px;
+}
+
+.auction-detail-page .message.success {
+  background: #d4edda;
+  color: #155724;
+}
+
+.auction-detail-page .message.error {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.bids-section {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.bids-section h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+  color: #2c3e50;
+}
+
+.bids-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bids-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.no-bids {
+  color: #7f8c8d;
+  margin: 0;
+}

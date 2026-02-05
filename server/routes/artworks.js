@@ -52,7 +52,7 @@ router.get('/:id', async (req, res) => {
 // @access  Private (Approved Artist or Admin)
 router.post('/', protect, authorize('artist', 'admin'), requireApprovedArtist, upload.single('image'), async (req, res) => {
   try {
-    const { title, description, price, category } = req.body;
+    const { title, description, price, category, medium } = req.body;
 
     // Validation
     if (!title || !description || !price || !category) {
@@ -69,6 +69,7 @@ router.post('/', protect, authorize('artist', 'admin'), requireApprovedArtist, u
       description,
       price: parseFloat(price),
       category,
+      medium: medium || '',
       imageURL: `/uploads/${req.file.filename}`,
       artistID: req.user._id,
     });
@@ -99,12 +100,13 @@ router.put('/:id', protect, requireApprovedArtist, upload.single('image'), async
     }
 
     // Update fields
-    const { title, description, price, category, isAvailable, isFeatured } = req.body;
+    const { title, description, price, category, medium, isAvailable, isFeatured } = req.body;
     
     if (title) artwork.title = title;
     if (description) artwork.description = description;
     if (price) artwork.price = parseFloat(price);
     if (category) artwork.category = category;
+    if (medium !== undefined) artwork.medium = medium;
     if (isAvailable !== undefined) artwork.isAvailable = isAvailable === 'true' || isAvailable === true;
     // Only admin can set featured status
     if (isFeatured !== undefined && req.user.role === 'admin') {

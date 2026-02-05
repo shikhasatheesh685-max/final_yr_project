@@ -1,0 +1,80 @@
+.create-auction-page {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.create-auction-page .back-link {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: #3498db;
+  text-decoration: none;
+}
+
+.create-auction-page h1 {
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+  color: #2c3e50;
+}
+
+.create-auction-desc {
+  color: #7f8c8d;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.create-auction-form .form-group {
+  margin-bottom: 1.25rem;
+}
+
+.create-auction-form .form-group label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.create-auction-form .form-group input,
+.create-auction-form .form-group select {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.create-auction-form button {
+  padding: 0.75rem 1.5rem;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.create-auction-form button:hover:not(:disabled) {
+  background: #2980b9;
+}
+
+.create-auction-form button:disabled {
+  background: #95a5a6;
+  cursor: not-allowed;
+}
+
+.create-auction-page .error-message {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.no-artworks {
+  color: #7f8c8d;
+  padding: 2rem 0;
+}
+
+.no-artworks a {
+  color: #3498db;
+}

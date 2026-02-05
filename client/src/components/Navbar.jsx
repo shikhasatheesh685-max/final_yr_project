@@ -14,6 +14,7 @@ const Navbar = () => {
 
         <div className="nav-links">
           <Link to="/">Gallery</Link>
+          <Link to="/auctions">Auctions</Link>
           
           {isAuthenticated ? (
             <>

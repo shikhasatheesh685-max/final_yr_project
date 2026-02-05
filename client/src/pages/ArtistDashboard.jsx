@@ -43,6 +43,11 @@ const ArtistDashboard = () => {
           <h3>Sales Status</h3>
           <p>Track your artwork sales and revenue</p>
         </Link>
+
+        <Link to="/artist/auctions" className="dashboard-link-card">
+          <h3>My Auctions</h3>
+          <p>Create auction listings and finalize auctions</p>
+        </Link>
       </div>
     </div>
   );

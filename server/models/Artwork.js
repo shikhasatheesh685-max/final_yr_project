@@ -18,6 +18,10 @@ const artworkSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please add a category'],
   },
+  medium: {
+    type: String,
+    default: '',
+  },
   imageURL: {
     type: String,
     required: [true, 'Please add an image'],

@@ -22,6 +22,10 @@ import AdminSiteContent from './pages/AdminSiteContent';
 import AdminReports from './pages/AdminReports';
 import UserOrders from './pages/UserOrders';
 import ArtistProfile from './pages/ArtistProfile';
+import Auctions from './pages/Auctions';
+import AuctionDetail from './pages/AuctionDetail';
+import MyAuctions from './pages/MyAuctions';
+import CreateAuction from './pages/CreateAuction';
 import NotFound from './pages/NotFound';
 import './App.css';
 
@@ -35,6 +39,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/artwork/:id" element={<ArtworkDetail />} />
             <Route path="/artist/:id" element={<ArtistProfile />} />
+            <Route path="/auctions" element={<Auctions />} />
+            <Route path="/auction/:id" element={<AuctionDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/admin/login" element={<AdminLogin />} />
@@ -77,6 +83,22 @@ function App() {
               element={
                 <ProtectedRoute requiredRole="artist">
                   <ArtistSales />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/artist/auctions"
+              element={
+                <ProtectedRoute requiredRole={['artist', 'admin']}>
+                  <MyAuctions />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/artist/auctions/create"
+              element={
+                <ProtectedRoute requiredRole={['artist', 'admin']}>
+                  <CreateAuction />
                 </ProtectedRoute>
               }
             />

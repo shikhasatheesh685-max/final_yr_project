@@ -97,4 +97,15 @@ export const settingsAPI = {
   update: (data) => api.put('/settings', data),
 };
 
+// Auctions API (spec: create listing, set base price & duration, place bid, view bids, finalize)
+export const auctionsAPI = {
+  getAll: (params) => api.get('/auctions', { params }),
+  getMy: () => api.get('/auctions/my'),
+  getById: (id) => api.get(`/auctions/${id}`),
+  create: (data) => api.post('/auctions', data),
+  placeBid: (id, amount) => api.post(`/auctions/${id}/bids`, { amount }),
+  getBids: (id) => api.get(`/auctions/${id}/bids`),
+  finalize: (id) => api.put(`/auctions/${id}/finalize`),
+};
+
 export default api;

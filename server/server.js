@@ -21,13 +21,28 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/artworks', require('./routes/artworks'));
+app.use('/api/items', require('./routes/artworks')); // Spec alias: items = artworks
 app.use('/api/orders', require('./routes/orders'));
+// Mount auctions router (ensure it's loaded)
+let auctionsRouter;
+try {
+  auctionsRouter = require('./routes/auctions');
+  app.use('/api/auctions', auctionsRouter);
+} catch (err) {
+  console.error('Failed to load auctions route:', err.message);
+}
 app.use('/api/categories', require('./routes/categories'));
 app.use('/api/settings', require('./routes/settings'));
 
 // Test route
 app.get('/', (req, res) => {
   res.json({ message: 'Server is running!' });
+});
+
+// 404 handler – log so we can see what path was requested
+app.use((req, res) => {
+  console.warn('[404]', req.method, req.originalUrl);
+  res.status(404).json({ error: 'Not found', path: req.originalUrl, method: req.method });
 });
 
 const PORT = process.env.PORT || 5000;

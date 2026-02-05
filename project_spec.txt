@@ -47,7 +47,14 @@ E. Admin:
 •	Can Add/Edit/Delete artworks.
 •	Can View all orders and sales reports.
 •	Can Manage categories and featured artworks.
+F. Auction:
 
+Can create auction listings for artworks.
+Can set base price and auction duration.
+Can allow multiple users to place bids on an artwork.
+Can view all bids for their auctioned artwork.
+Can finalize auction and select highest bidder.
+Can mark artwork as sold after auction completion.
 
 
 5. DATABASE STRUCTURE (Schemas)

@@ -12,7 +12,7 @@
 | **Frontend (Client)** | ✅ Complete | All roles (Visitor, Artist, Admin) and main flows |
 | **Admin via frontend** | ✅ Done | Admin dashboard and sub-pages reachable from navbar |
 | **API ↔ Frontend** | ✅ Aligned | `api.js` matches server routes |
-| **Spec vs implementation** | ⚠️ Minor | Spec says `/api/items`; app correctly uses `/api/artworks` (no change needed) |
+| **Spec vs implementation** | ✅ Aligned | `/api/items` is mounted as alias to artworks; spec §7 satisfied |
 
 **Verdict:** The project is in good shape and can be run and demonstrated. A few small fixes and one optional feature will make it more robust and easier to show.
 
@@ -49,7 +49,7 @@
 
 ---
 
-## 4. API vs Spec (No Change Needed)
+## 4. API vs Spec
 
 - **Spec (project_spec.txt):**  
   `GET/POST /api/items`, `PUT/DELETE /api/items/:id`
