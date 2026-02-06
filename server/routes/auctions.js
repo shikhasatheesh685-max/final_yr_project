@@ -122,6 +122,10 @@ router.post('/:id/bids', protect, async (req, res) => {
     }
 
     const highest = await Bid.findOne({ auctionID: auction._id }).sort({ amount: -1 });
+    // Prevent same user from placing consecutive highest bids
+    if (highest && highest.userID.toString() === req.user._id.toString()) {
+      return res.status(400).json({ message: 'You cannot place consecutive bids. Wait for another user to place a bid.' });
+    }
     if (highest && bidAmount <= highest.amount) {
       return res.status(400).json({ message: `Bid must be higher than current highest (${highest.amount})` });
     }
