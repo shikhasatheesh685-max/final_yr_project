@@ -15,14 +15,12 @@ const AdminLogin = () => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [ensureDone, setEnsureDone] = useState(false);
   const { login, logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    authAPI.ensureAdmin()
-      .then(() => setEnsureDone(true))
-      .catch(() => setEnsureDone(true));
+    // Ensure default admin exists on first run; ignore result.
+    authAPI.ensureAdmin().catch(() => {});
   }, []);
 
   const handleChange = (e) => {
@@ -78,14 +76,7 @@ const AdminLogin = () => {
         <h2>Admin Login</h2>
         <p className="admin-login-hint">Administrator access only. Use the credentials below.</p>
 
-        {ensureDone && (
-          <div className="default-credentials-box">
-            <strong>Default credentials</strong>
-            <p>Email: <code>admin@artgallery.com</code></p>
-            <p>Password: <code>admin123</code></p>
-            <p className="default-credentials-note">If this is your first time, the default admin is created automatically.</p>
-          </div>
-        )}
+        {/* Default credentials box removed for security. */}
 
         <form onSubmit={handleSubmit}>
           {error && <div className="error-message">{error}</div>}
