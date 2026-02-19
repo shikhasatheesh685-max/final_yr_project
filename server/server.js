@@ -23,6 +23,7 @@ app.use('/api/users', require('./routes/users'));
 app.use('/api/artworks', require('./routes/artworks'));
 app.use('/api/items', require('./routes/artworks')); // Spec alias: items = artworks
 app.use('/api/orders', require('./routes/orders'));
+app.use('/api/transactions', require('./routes/transactions'));
 // Mount auctions router (ensure it's loaded)
 let auctionsRouter;
 try {

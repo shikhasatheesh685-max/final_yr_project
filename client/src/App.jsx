@@ -12,6 +12,7 @@ import UploadArtwork from './pages/UploadArtwork';
 import MyArtworks from './pages/MyArtworks';
 import EditArtwork from './pages/EditArtwork';
 import ArtistSales from './pages/ArtistSales';
+import ArtistTransactions from './pages/ArtistTransactions';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminUsers from './pages/AdminUsers';
 import AdminArtworks from './pages/AdminArtworks';
@@ -21,6 +22,7 @@ import AdminCategories from './pages/AdminCategories';
 import AdminSiteContent from './pages/AdminSiteContent';
 import AdminReports from './pages/AdminReports';
 import UserOrders from './pages/UserOrders';
+import Payment from './pages/Payment';
 import ArtistProfile from './pages/ArtistProfile';
 import Auctions from './pages/Auctions';
 import AuctionDetail from './pages/AuctionDetail';
@@ -83,6 +85,14 @@ function App() {
               element={
                 <ProtectedRoute requiredRole="artist">
                   <ArtistSales />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/artist/transactions"
+              element={
+                <ProtectedRoute requiredRole="artist">
+                  <ArtistTransactions />
                 </ProtectedRoute>
               }
             />
@@ -175,6 +185,15 @@ function App() {
               element={
                 <ProtectedRoute>
                   <UserOrders />
+                </ProtectedRoute>
+              }
+            />
+            {/* Payment / Transaction history (role-based) */}
+            <Route
+              path="/payment"
+              element={
+                <ProtectedRoute>
+                  <Payment />
                 </ProtectedRoute>
               }
             />

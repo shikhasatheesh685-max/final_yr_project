@@ -70,6 +70,50 @@
   color: white;
 }
 
+.auction-image-section .status-badge.sold {
+  background: #e74c3c;
+  color: white;
+}
+
+.auction-detail-info .sold-notice {
+  color: #e74c3c;
+  font-weight: 500;
+}
+
+.auction-detail-info .admin-no-bid {
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+.auction-detail-info .owner-actions {
+  margin-top: 1rem;
+}
+
+.auction-detail-info .owner-notice {
+  color: #7f8c8d;
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+}
+
+.auction-detail-info .end-early-btn {
+  padding: 0.6rem 1.2rem;
+  background: #e67e22;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.auction-detail-info .end-early-btn:hover:not(:disabled) {
+  background: #d35400;
+}
+
+.auction-detail-info .end-early-btn:disabled {
+  background: #95a5a6;
+  cursor: not-allowed;
+}
+
 .auction-detail-info h1 {
   margin: 0 0 0.5rem 0;
   font-size: 1.75rem;

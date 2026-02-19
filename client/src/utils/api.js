@@ -67,8 +67,14 @@ export const ordersAPI = {
   getAll: () => api.get('/orders'),
   getById: (id) => api.get(`/orders/${id}`),
   updateStatus: (id, status) => api.put(`/orders/${id}/status`, { orderStatus: status }),
+  transfer: (id) => api.put(`/orders/${id}/transfer`),
   getArtistSales: () => api.get('/orders/artist/sales'),
   getSalesReport: () => api.get('/orders/admin/sales-report'),
+};
+
+// Transactions API (artist payout history)
+export const transactionsAPI = {
+  getMy: () => api.get('/transactions/my'),
 };
 
 // Users API (Admin only)

@@ -1,0 +1,173 @@
+.payment-page {
+  padding: 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.payment-page h1 {
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.payment-subtitle {
+  color: #7f8c8d;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.payment-error {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #f5c6cb;
+}
+
+.payment-section {
+  background: white;
+  padding: 1.5rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
+}
+
+.payment-section h2 {
+  font-size: 1.25rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.payment-stats {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.payment-stats span {
+  color: #555;
+}
+
+.payment-stats .amount-received {
+  color: #27ae60;
+}
+
+.payment-empty {
+  text-align: center;
+  padding: 2rem;
+  color: #7f8c8d;
+}
+
+.payment-empty a {
+  color: #3498db;
+  margin-top: 0.5rem;
+  display: inline-block;
+}
+
+.payment-table-wrap {
+  overflow-x: auto;
+}
+
+.payment-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.payment-table th,
+.payment-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.payment-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.payment-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.payment-meta {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+/* Debit: money paid (customer) */
+.amount-deducted {
+  color: #e74c3c;
+  font-weight: 500;
+}
+
+/* Credit: money received (artist) */
+.amount-received {
+  color: #27ae60;
+  font-weight: 500;
+}
+
+.status-badge {
+  padding: 0.35rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-confirmed {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.status-sold {
+  background: #d4edda;
+  color: #155724;
+}
+
+.payment-admin-actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.payment-link-btn {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  background: #3498db;
+  color: white;
+  border-radius: 6px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.payment-link-btn:hover {
+  background: #2980b9;
+}
+
+.payment-more {
+  margin-top: 1rem;
+}
+
+.payment-more a {
+  color: #3498db;
+}
+
+@media (max-width: 768px) {
+  .payment-page {
+    padding: 1rem;
+  }
+
+  .payment-table th,
+  .payment-table td {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+}

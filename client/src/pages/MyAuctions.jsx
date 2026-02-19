@@ -75,9 +75,14 @@ const MyAuctions = () => {
                   <p><strong>Status:</strong> {a.status}</p>
                   <div className="my-auction-actions">
                     <Link to={`/auction/${a._id}`} className="view-btn">View & Bids</Link>
-                    {isActive && ended && (
-                      <button type="button" onClick={() => handleFinalize(a._id)} className="finalize-btn">
-                        Finalize Auction
+                    {isActive && (
+                      <button
+                        type="button"
+                        onClick={() => handleFinalize(a._id)}
+                        className="finalize-btn"
+                        title={ended ? 'Close auction and set winner' : 'End auction before scheduled time and set winner'}
+                      >
+                        {ended ? 'Finalize Auction' : 'End auction early'}
                       </button>
                     )}
                   </div>

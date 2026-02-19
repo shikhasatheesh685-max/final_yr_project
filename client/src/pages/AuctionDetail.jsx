@@ -15,11 +15,28 @@ const AuctionDetail = () => {
   const [loading, setLoading] = useState(true);
   const [bidAmount, setBidAmount] = useState('');
   const [bidding, setBidding] = useState(false);
+  const [finalizing, setFinalizing] = useState(false);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
     auctionsAPI.getById(id).then((r) => setData(r.data)).catch(() => setData(null)).finally(() => setLoading(false));
   }, [id]);
+
+  const handleEndEarly = async () => {
+    if (!window.confirm('End this auction now? The highest bidder will win and the artwork will be marked sold. This cannot be undone.')) return;
+    setFinalizing(true);
+    setMessage('');
+    try {
+      await auctionsAPI.finalize(id);
+      setMessage('Auction ended. Winner has been set.');
+      const r = await auctionsAPI.getById(id);
+      setData(r.data);
+    } catch (err) {
+      setMessage(err.response?.data?.message || 'Failed to end auction');
+    } finally {
+      setFinalizing(false);
+    }
+  };
 
   const handlePlaceBid = async (e) => {
     e.preventDefault();
@@ -53,9 +70,12 @@ const AuctionDetail = () => {
   const { auction, bids } = data;
   const art = auction.artworkID;
   const ended = new Date(auction.endTime) < new Date();
+  const artworkSold = art && art.isAvailable === false;
   const isOwner = user && (auction.createdBy?._id === user._id || auction.createdBy === user._id);
   const highestBid = bids?.length ? bids[0] : null;
   const minBid = highestBid ? highestBid.amount + 0.01 : auction.basePrice;
+  const isAdmin = user?.role === 'admin';
+  const canBid = !ended && !isOwner && !isAdmin && isAuthenticated && !artworkSold && auction.status === 'active';
 
   return (
     <div className="auction-detail-page">
@@ -68,8 +88,8 @@ const AuctionDetail = () => {
           ) : (
             <div className="placeholder">No Image</div>
           )}
-          <span className={`status-badge ${ended ? 'ended' : 'active'}`}>
-            {ended ? 'Ended' : 'Active'}
+          <span className={`status-badge ${artworkSold ? 'sold' : ended ? 'ended' : 'active'}`}>
+            {artworkSold ? 'Sold' : ended ? 'Ended' : 'Active'}
           </span>
         </div>
 
@@ -80,7 +100,10 @@ const AuctionDetail = () => {
           <p><strong>Ends:</strong> {new Date(auction.endTime).toLocaleString()}</p>
           {highestBid && <p className="current-bid"><strong>Current highest bid:</strong> ${highestBid.amount} {highestBid.userID?.name && `(${highestBid.userID.name})`}</p>}
 
-          {!ended && !isOwner && isAuthenticated && (
+          {artworkSold && (
+            <p className="sold-notice">This artwork has been sold. Bidding is closed.</p>
+          )}
+          {canBid && (
             <form onSubmit={handlePlaceBid} className="bid-form">
               <label>Your bid (min ${minBid})</label>
               <input
@@ -94,8 +117,21 @@ const AuctionDetail = () => {
               <button type="submit" disabled={bidding}>{bidding ? 'Placing...' : 'Place Bid'}</button>
             </form>
           )}
-          {!ended && !isAuthenticated && (
+          {!ended && !artworkSold && !isAuthenticated && (
             <p><Link to="/login">Log in</Link> to place a bid.</p>
+          )}
+          {!ended && !artworkSold && isAuthenticated && isAdmin && (
+            <p className="admin-no-bid">Admins cannot place bids.</p>
+          )}
+          {!artworkSold && isAuthenticated && isOwner && auction.status === 'active' && (
+            <div className="owner-actions">
+              <p className="owner-notice">
+                {ended ? 'Auction time has ended. Finalize to set the winner.' : 'You are the auction owner. You can end the auction before the scheduled time.'}
+              </p>
+              <button type="button" onClick={handleEndEarly} disabled={finalizing} className="end-early-btn">
+                {finalizing ? 'Ending...' : ended ? 'Finalize auction' : 'End auction early'}
+              </button>
+            </div>
           )}
 
           {message && <div className={`message ${message.includes('success') ? 'success' : 'error'}`}>{message}</div>}

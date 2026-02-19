@@ -71,21 +71,21 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="auth-container">
+    <div className="auth-page">
+      <div className="auth-split-left"></div>
+      <div className="auth-split-right"></div>
       <div className="auth-card admin-login-card">
-        <h2>Admin Login</h2>
-        <p className="admin-login-hint">Administrator access only. Use the credentials below.</p>
-
-        {/* Default credentials box removed for security. */}
+        <h2>ADMIN LOGIN</h2>
+        <p className="admin-login-hint">Administrator access only</p>
 
         <form onSubmit={handleSubmit}>
           {error && <div className="error-message">{error}</div>}
 
           <div className="form-group">
-            <label>Email</label>
             <input
               type="email"
               name="email"
+              placeholder="ADMIN EMAIL"
               value={formData.email}
               onChange={handleChange}
               required
@@ -93,10 +93,10 @@ const AdminLogin = () => {
           </div>
 
           <div className="form-group">
-            <label>Password</label>
             <input
               type="password"
               name="password"
+              placeholder="PASSWORD"
               value={formData.password}
               onChange={handleChange}
               required
@@ -104,7 +104,7 @@ const AdminLogin = () => {
           </div>
 
           <button type="submit" disabled={loading} className="submit-btn">
-            {loading ? 'Verifying...' : 'Admin Login'}
+            {loading ? 'VERIFYING...' : 'SIGN IN'}
           </button>
         </form>
 

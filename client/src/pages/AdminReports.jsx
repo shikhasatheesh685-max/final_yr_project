@@ -99,8 +99,12 @@ const AdminReports = () => {
             <p className="report-value">${(sales.totalRevenue ?? 0).toFixed(2)}</p>
           </div>
           <div className="report-card">
-            <h3>Total Commission</h3>
+            <h3>Admin Commission (7%)</h3>
             <p className="report-value">${(sales.totalCommission ?? 0).toFixed(2)}</p>
+          </div>
+          <div className="report-card">
+            <h3>Total Artist Payout</h3>
+            <p className="report-value">${(sales.totalArtistPayout ?? 0).toFixed(2)}</p>
           </div>
           <div className="report-card">
             <h3>Pending Revenue</h3>
@@ -124,7 +128,7 @@ const AdminReports = () => {
                   <th>Customer</th>
                   <th>Artwork</th>
                   <th>Amount</th>
-                  <th>Commission</th>
+                  <th>Admin Commission</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -135,7 +139,7 @@ const AdminReports = () => {
                     <td>{order.userID?.name || 'N/A'}</td>
                     <td>{order.artworkID?.title || 'N/A'}</td>
                     <td>${order.totalAmount?.toFixed(2)}</td>
-                    <td>${(order.commissionAmount || 0).toFixed(2)}</td>
+                    <td>${(order.adminCommission ?? 0).toFixed(2)}</td>
                     <td><span className={`status-badge status-${order.orderStatus?.toLowerCase()}`}>{order.orderStatus}</span></td>
                   </tr>
                 ))}

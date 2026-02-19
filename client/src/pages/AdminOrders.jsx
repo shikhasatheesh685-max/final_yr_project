@@ -36,6 +36,17 @@ const AdminOrders = () => {
     }
   };
 
+  const handleTransfer = async (orderId) => {
+    try {
+      setMessage('');
+      await ordersAPI.transfer(orderId);
+      setMessage('Payout marked as transferred');
+      fetchOrders();
+    } catch (error) {
+      setMessage(error.response?.data?.message || 'Failed to mark payout transferred');
+    }
+  };
+
   if (loading) {
     return <LoadingSpinner message="Loading orders..." />;
   }
@@ -72,7 +83,9 @@ const AdminOrders = () => {
                 <th>Customer</th>
                 <th>Artwork</th>
                 <th>Amount</th>
+                <th>Type</th>
                 <th>Status</th>
+                <th>Payout</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -101,11 +114,29 @@ const AdminOrders = () => {
                       </div>
                     </div>
                   </td>
-                  <td>${order.totalAmount}</td>
+                  <td>${order.totalAmount?.toFixed(2)}</td>
+                  <td>{order.paymentType || '—'}</td>
                   <td>
                     <span className={getStatusBadgeClass(order.orderStatus)}>
                       {order.orderStatus}
                     </span>
+                  </td>
+                  <td>
+                    {order.orderStatus === 'Sold' ? (
+                      order.payoutStatus === 'Transferred' ? (
+                        <span className="status-badge status-sold">Transferred</span>
+                      ) : (
+                        <button
+                          type="button"
+                          className="transfer-btn"
+                          onClick={() => handleTransfer(order._id)}
+                        >
+                          Mark transferred
+                        </button>
+                      )
+                    ) : (
+                      '—'
+                    )}
                   </td>
                   <td>
                     <select

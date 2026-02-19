@@ -1,0 +1,25 @@
+.artist-transactions-container {
+  padding: 20px;
+}
+
+.transactions-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.transactions-table th,
+.transactions-table td {
+  border: 1px solid #e1e1e1;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.transactions-table th {
+  background: #f8f8f8;
+}
+
+.message.error {
+  color: #b00020;
+  margin-bottom: 12px;
+}
+

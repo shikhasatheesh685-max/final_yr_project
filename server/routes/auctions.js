@@ -103,6 +103,10 @@ router.post('/', protect, authorize('artist', 'admin'), requireApprovedArtist, a
 // @access  Private
 router.post('/:id/bids', protect, async (req, res) => {
   try {
+    if (req.user.role === 'admin') {
+      return res.status(403).json({ message: 'Admins cannot place bids.' });
+    }
+
     const auction = await Auction.findById(req.params.id).populate('artworkID');
     if (!auction) return res.status(404).json({ message: 'Auction not found' });
     if (auction.status !== 'active') {
@@ -110,6 +114,10 @@ router.post('/:id/bids', protect, async (req, res) => {
     }
     if (new Date() > new Date(auction.endTime)) {
       return res.status(400).json({ message: 'Auction has ended' });
+    }
+    // Artwork sold (e.g. direct purchase) — no bidding
+    if (auction.artworkID && !auction.artworkID.isAvailable) {
+      return res.status(400).json({ message: 'This artwork has been sold; bidding is closed.' });
     }
     if (auction.artworkID.artistID.toString() === req.user._id.toString()) {
       return res.status(400).json({ message: 'You cannot bid on your own artwork' });
@@ -194,15 +202,28 @@ router.put('/:id/finalize', protect, async (req, res) => {
     auction.status = 'completed';
     await auction.save();
 
-    const artwork = await Artwork.findById(auction.artworkID._id);
-    artwork.isAvailable = false;
-    await artwork.save();
+    // Mark artwork as sold so it no longer appears available in the gallery
+    const artworkId = auction.artworkID._id || auction.artworkID;
+    const artwork = await Artwork.findById(artworkId);
+    if (artwork) {
+      artwork.isAvailable = false;
+      await artwork.save();
+    }
+
+    const commissionRate = parseFloat(process.env.COMMISSION_RATE) || 0.07;
+    const totalAmount = winningBid.amount;
+    const adminCommission = Math.round(totalAmount * commissionRate * 100) / 100;
+    const artistAmount = Math.round((totalAmount - adminCommission) * 100) / 100;
 
     await Order.create({
       userID: winningBid.userID,
       artworkID: artwork._id,
-      totalAmount: winningBid.amount,
+      totalAmount,
+      adminCommission,
+      artistAmount,
       orderStatus: 'Sold',
+      paymentType: 'Auction',
+      payoutStatus: 'Pending',
     });
 
     const updated = await Auction.findById(auction._id)

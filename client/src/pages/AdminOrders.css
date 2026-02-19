@@ -143,6 +143,20 @@
   outline: none;
 }
 
+.transfer-btn {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.transfer-btn:hover {
+  background: #2980b9;
+}
+
 @media (max-width: 768px) {
   .orders-table {
     font-size: 0.9rem;

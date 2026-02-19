@@ -25,6 +25,7 @@ const Navbar = () => {
                 <Link to="/admin">Admin Dashboard</Link>
               )}
               <Link to="/orders">My Orders</Link>
+              <Link to="/payment">Payment</Link>
               <span className="user-name">Hello, {user.name}</span>
               <button onClick={logout} className="logout-btn">
                 Logout

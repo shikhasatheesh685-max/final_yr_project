@@ -21,10 +21,25 @@ const orderSchema = new mongoose.Schema({
     enum: ['Pending', 'Confirmed', 'Sold'],
     default: 'Pending',
   },
-  commissionAmount: {
+  adminCommission: {
     type: Number,
     default: 0,
     min: 0,
+  },
+  artistAmount: {
+    type: Number,
+    default: 0,
+    min: 0,
+  },
+  paymentType: {
+    type: String,
+    enum: ['Artwork', 'Auction'],
+    default: 'Artwork',
+  },
+  payoutStatus: {
+    type: String,
+    enum: ['Pending', 'Transferred'],
+    default: 'Pending',
   },
 }, {
   timestamps: true,

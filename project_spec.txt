@@ -33,29 +33,19 @@ B. Visitor / Customer:
 •	Can Register and Login to purchase artworks.
 •	Can Browse artworks by category or artist.
 •	Can Place orders and view order history.
-C. Sales
-•	View all sales transactions.
-•	Track sold artworks and total revenue.
-•	Generate sales reports for admin review.
-D. Artwork Display
-•	Manage how artworks appear on the gallery page.
-•	Arrange artworks by category, popularity, or featured status.
-•	Control visibility of artworks (featured, hidden, or available).
-E. Admin:
+c. Admin:
 •	Can Login to secure admin dashboard.
 •	Can Approve or Manage artist accounts.
 •	Can Add/Edit/Delete artworks.
 •	Can View all orders and sales reports.
 •	Can Manage categories and featured artworks.
 F. Auction:
-
 Can create auction listings for artworks.
 Can set base price and auction duration.
 Can allow multiple users to place bids on an artwork.
 Can view all bids for their auctioned artwork.
 Can finalize auction and select highest bidder.
 Can mark artwork as sold after auction completion.
-
 
 5. DATABASE STRUCTURE (Schemas)
 -------------------------------

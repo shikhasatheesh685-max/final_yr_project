@@ -1,6 +1,7 @@
 const express = require('express');
 const Order = require('../models/Order');
 const Artwork = require('../models/Artwork');
+const Auction = require('../models/Auction');
 const { protect, authorize, requireApprovedArtist } = require('../middleware/auth');
 
 const router = express.Router();
@@ -32,21 +33,32 @@ router.post('/', protect, async (req, res) => {
       return res.status(400).json({ message: 'You cannot purchase your own artwork' });
     }
 
-    const commissionRate = parseFloat(process.env.COMMISSION_RATE) || 0.1;
-    const commissionAmount = Math.round(artwork.price * commissionRate * 100) / 100;
+    const commissionRate = parseFloat(process.env.COMMISSION_RATE) || 0.07;
+    const totalAmount = artwork.price;
+    const adminCommission = Math.round(totalAmount * commissionRate * 100) / 100;
+    const artistAmount = Math.round((totalAmount - adminCommission) * 100) / 100;
 
     // Create order
     const order = await Order.create({
       userID: req.user._id,
       artworkID: artwork._id,
-      totalAmount: artwork.price,
+      totalAmount,
       orderStatus: 'Pending',
-      commissionAmount,
+      adminCommission,
+      artistAmount,
+      paymentType: 'Artwork',
+      payoutStatus: 'Pending',
     });
 
     // Mark artwork as unavailable
     artwork.isAvailable = false;
     await artwork.save();
+
+    // Cancel any active auction for this artwork (sold to customer, no bidding needed)
+    await Auction.updateMany(
+      { artworkID: artwork._id, status: 'active' },
+      { status: 'cancelled' }
+    );
 
     const populatedOrder = await Order.findById(order._id)
       .populate('userID', 'name email')
@@ -69,12 +81,12 @@ router.get('/', protect, async (req, res) => {
     if (req.user.role === 'admin') {
       orders = await Order.find()
         .populate('userID', 'name email')
-        .populate('artworkID')
+        .populate({ path: 'artworkID', populate: { path: 'artistID', select: 'name' } })
         .sort({ createdAt: -1 });
     } else {
       orders = await Order.find({ userID: req.user._id })
         .populate('userID', 'name email')
-        .populate('artworkID')
+        .populate({ path: 'artworkID', populate: { path: 'artistID', select: 'name' } })
         .sort({ createdAt: -1 });
     }
 
@@ -103,6 +115,30 @@ router.get('/:id', protect, async (req, res) => {
     }
 
     res.json(order);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// @route   PUT /api/orders/:id/transfer
+// @desc    Mark payout as transferred (Admin only). Allowed only when orderStatus === "Sold".
+// @access  Private (Admin only)
+router.put('/:id/transfer', protect, authorize('admin'), async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    if (order.orderStatus !== 'Sold') {
+      return res.status(400).json({ message: 'Only sold orders can be marked as transferred' });
+    }
+    order.payoutStatus = 'Transferred';
+    await order.save();
+
+    const updatedOrder = await Order.findById(order._id)
+      .populate('userID', 'name email')
+      .populate('artworkID');
+    res.json(updatedOrder);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -190,11 +226,12 @@ router.get('/admin/sales-report', protect, authorize('admin'), async (req, res) 
       .populate({ path: 'artworkID', populate: { path: 'artistID', select: 'name' } })
       .sort({ createdAt: -1 });
 
-    // Calculate statistics
+    // Calculate statistics (only Sold orders count toward revenue/commission/payout)
     const totalOrders = allOrders.length;
     const soldOrders = allOrders.filter(order => order.orderStatus === 'Sold');
     const totalRevenue = soldOrders.reduce((sum, order) => sum + order.totalAmount, 0);
-    const totalCommission = soldOrders.reduce((sum, order) => sum + (order.commissionAmount || 0), 0);
+    const totalCommission = soldOrders.reduce((sum, order) => sum + (order.adminCommission || 0), 0);
+    const totalArtistPayout = soldOrders.reduce((sum, order) => sum + (order.artistAmount || 0), 0);
 
     const soldCount = soldOrders.length;
     const pendingCount = allOrders.filter(order => order.orderStatus === 'Pending').length;
@@ -213,6 +250,7 @@ router.get('/admin/sales-report', protect, authorize('admin'), async (req, res) 
         totalOrders,
         totalRevenue,
         totalCommission,
+        totalArtistPayout,
         soldCount,
         pendingCount,
         confirmedCount,
