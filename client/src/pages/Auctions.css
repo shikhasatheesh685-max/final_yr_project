@@ -1,18 +1,23 @@
+/* Visitor dashboard – aligned with admin UI */
 .auctions-page {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
+  min-height: 100vh;
+  background: #f5f7f6;
 }
 
 .auctions-page h1 {
-  font-size: 2rem;
-  color: #2c3e50;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a3c34;
   margin-bottom: 0.5rem;
 }
 
 .auctions-intro {
-  color: #7f8c8d;
+  color: #5f6d64;
   margin-bottom: 2rem;
+  font-size: 0.95rem;
 }
 
 .auctions-grid {
@@ -25,22 +30,22 @@
   text-decoration: none;
   color: inherit;
   background: white;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .auction-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .auction-image {
   position: relative;
   aspect-ratio: 1;
   overflow: hidden;
-  background: #ecf0f1;
+  background: #f0f2f1;
 }
 
 .auction-image img {
@@ -55,7 +60,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #95a5a6;
+  color: #5f6d64;
 }
 
 .auction-image .status-badge {
@@ -84,24 +89,28 @@
 
 .auction-info h3 {
   margin: 0 0 0.5rem 0;
-  font-size: 1.1rem;
-  color: #2c3e50;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: #1a3c34;
 }
 
 .auction-info .base-price {
   margin: 0 0 0.25rem 0;
   font-weight: 600;
-  color: #27ae60;
+  color: #1a3c34;
 }
 
 .auction-info .end-time {
   margin: 0;
-  font-size: 0.85rem;
-  color: #7f8c8d;
+  font-size: 0.875rem;
+  color: #5f6d64;
 }
 
 .no-data {
   text-align: center;
   padding: 3rem;
-  color: #7f8c8d;
+  color: #5f6d64;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }

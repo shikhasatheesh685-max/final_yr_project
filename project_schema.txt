@@ -1,0 +1,140 @@
+================================================================================
+                    ART GALLERY SHOWCASE - DATABASE SCHEMA
+================================================================================
+Database: MongoDB (Mongoose ODM)
+This document lists all collections (tables) and their fields.
+
+================================================================================
+1. USER
+================================================================================
+Stores user accounts: artists, visitors, and admins. Artists require approval.
+
+| Field Name   | Data Type | Constraints                    | Required | Description                          |
+|--------------|-----------|--------------------------------|----------|--------------------------------------|
+| name         | String    | -                              | Yes      | User's display name                  |
+| email        | String    | unique                         | Yes      | Login email; must be unique          |
+| password     | String    | -                              | Yes      | Hashed password                      |
+| role         | String    | enum: artist, visitor, admin   | No       | User role; default: visitor          |
+| isApproved   | Boolean   | default: true                  | No       | Artist approval flag (admin-set)     |
+| createdAt    | Date      | auto                           | No       | Record creation timestamp            |
+| updatedAt    | Date      | auto                           | No       | Last update timestamp                |
+
+================================================================================
+2. ARTWORK
+================================================================================
+Art pieces listed for sale or auction. Linked to artist (User).
+
+| Field Name   | Data Type | Constraints                    | Required | Description                          |
+|--------------|-----------|--------------------------------|----------|--------------------------------------|
+| title        | String    | -                              | Yes      | Artwork title                        |
+| description  | String    | -                              | Yes      | Artwork description                  |
+| price        | Number    | min: 0                         | Yes      | Sale price; cannot be negative       |
+| category     | String    | -                              | Yes      | Category name                        |
+| medium       | String    | default: ''                    | No       | Art medium (e.g. oil, digital)       |
+| imageURL     | String    | -                              | Yes      | Image path/URL (e.g. /uploads/...)   |
+| artistID     | ObjectId  | ref: User                      | Yes      | Reference to artist (User)            |
+| isAvailable  | Boolean   | default: true                  | No       | Whether artwork is available for sale|
+| isFeatured   | Boolean   | default: false                | No       | Featured on homepage                 |
+| createdAt    | Date      | auto                           | No       | Record creation timestamp            |
+| updatedAt    | Date      | auto                           | No       | Last update timestamp                |
+
+================================================================================
+3. ORDER
+================================================================================
+Purchase orders for artworks or auction wins. Tracks status and payouts.
+
+| Field Name     | Data Type | Constraints                      | Required | Description                          |
+|----------------|-----------|----------------------------------|----------|--------------------------------------|
+| userID         | ObjectId  | ref: User                        | Yes      | Buyer (User)                         |
+| artworkID      | ObjectId  | ref: Artwork                     | Yes      | Purchased artwork                    |
+| totalAmount    | Number    | min: 0                           | Yes      | Total order amount                   |
+| orderStatus    | String    | enum: Pending, Confirmed, Sold   | No       | Order status; default: Pending       |
+| adminCommission| Number    | default: 0, min: 0               | No       | Commission amount for admin         |
+| artistAmount   | Number    | default: 0, min: 0               | No       | Amount for artist                    |
+| paymentType    | String    | enum: Artwork, Auction           | No       | Direct purchase or auction win       |
+| payoutStatus   | String    | enum: Pending, Transferred       | No       | Artist payout status; default: Pending|
+| createdAt      | Date      | auto                             | No       | Record creation timestamp            |
+| updatedAt      | Date      | auto                             | No       | Last update timestamp                |
+
+================================================================================
+4. AUCTION
+================================================================================
+Auction listings for artworks. Links artwork, base price, and time window.
+
+| Field Name    | Data Type | Constraints                        | Required | Description                          |
+|---------------|-----------|------------------------------------|----------|--------------------------------------|
+| artworkID     | ObjectId  | ref: Artwork                       | Yes      | Artwork being auctioned              |
+| basePrice     | Number    | min: 0                             | Yes      | Minimum/starting bid price          |
+| startTime     | Date      | default: Date.now                 | No       | Auction start time                   |
+| endTime       | Date      | -                                  | Yes      | Auction end time                     |
+| status        | String    | enum: active, completed, cancelled | No       | Auction status; default: active     |
+| createdBy     | ObjectId  | ref: User                          | Yes      | Artist who created the auction       |
+| winningBidID   | ObjectId  | ref: Bid, default: null            | No       | Winning bid after completion         |
+| createdAt     | Date      | auto                               | No       | Record creation timestamp            |
+| updatedAt     | Date      | auto                               | No       | Last update timestamp                |
+
+================================================================================
+5. BID
+================================================================================
+Individual bids placed on auctions.
+
+| Field Name   | Data Type | Constraints | Required | Description                          |
+|--------------|-----------|-------------|----------|--------------------------------------|
+| auctionID    | ObjectId  | ref: Auction| Yes      | Auction being bid on                 |
+| userID       | ObjectId  | ref: User   | Yes      | Bidder (User)                        |
+| amount       | Number    | min: 0      | Yes      | Bid amount                           |
+| createdAt    | Date      | auto        | No       | Record creation timestamp            |
+| updatedAt    | Date      | auto        | No       | Last update timestamp                |
+
+================================================================================
+6. TRANSACTION
+================================================================================
+Records of financial transactions (payouts, sales, refunds) for accounting.
+
+| Field Name   | Data Type | Constraints                      | Required | Description                          |
+|--------------|-----------|----------------------------------|----------|--------------------------------------|
+| orderID      | ObjectId  | ref: Order                       | Yes      | Related order                        |
+| fromUser     | ObjectId  | ref: User, default: null         | No       | User paying (e.g. buyer)             |
+| toUser       | ObjectId  | ref: User                        | Yes      | User receiving (e.g. artist)         |
+| amount       | Number    | min: 0                           | Yes      | Transaction amount                   |
+| type         | String    | enum: payout, sale, refund       | No       | Transaction type; default: payout   |
+| balanceAfter | Number    | default: null                    | No       | Balance after transaction (optional) |
+| createdAt    | Date      | auto                             | No       | Record creation timestamp            |
+| updatedAt    | Date      | auto                             | No       | Last update timestamp                |
+
+================================================================================
+7. CATEGORY
+================================================================================
+Admin-managed artwork categories (e.g. Painting, Sculpture).
+
+| Field Name   | Data Type | Constraints | Required | Description                          |
+|--------------|-----------|-------------|----------|--------------------------------------|
+| name         | String    | unique, trim| Yes      | Category name; must be unique        |
+| createdAt    | Date      | auto        | No       | Record creation timestamp            |
+| updatedAt    | Date      | auto        | No       | Last update timestamp                |
+
+================================================================================
+8. SETTING
+================================================================================
+Key-value store for site configuration (admin-managed).
+
+| Field Name   | Data Type | Constraints | Required | Description                          |
+|--------------|-----------|-------------|----------|--------------------------------------|
+| key          | String    | unique, trim| Yes      | Setting key (e.g. commission_rate)   |
+| value        | String    | default: ''| No       | Setting value                        |
+| createdAt    | Date      | auto        | No       | Record creation timestamp            |
+| updatedAt    | Date      | auto        | No       | Last update timestamp                |
+
+================================================================================
+RELATIONSHIPS (REFERENCES)
+================================================================================
+- User        : referenced by Artwork (artistID), Order (userID), Auction (createdBy),
+                Bid (userID), Transaction (fromUser, toUser)
+- Artwork     : referenced by Order (artworkID), Auction (artworkID)
+- Order       : referenced by Transaction (orderID)
+- Auction     : referenced by Bid (auctionID)
+- Bid         : referenced by Auction (winningBidID)
+
+================================================================================
+END OF SCHEMA
+================================================================================

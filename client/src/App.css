@@ -27,6 +27,24 @@ body {
   margin: 0 auto;
 }
 
+/* Admin pages override */
+.main-content:has(.admin-layout) {
+  padding: 0;
+  max-width: none;
+}
+
+/* Fallback for browsers without :has() support */
+.admin-layout {
+  margin: -2rem;
+  width: calc(100% + 4rem);
+}
+
+/* No navbar pages */
+.main-content.no-navbar {
+  padding: 0;
+  max-width: none;
+}
+
 a {
   text-decoration: none;
   color: inherit;

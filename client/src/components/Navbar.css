@@ -35,19 +35,23 @@
   opacity: 0.8;
 }
 
-.user-name {
-  color: #ecf0f1;
-  font-size: 0.9rem;
+.navbar .user-name {
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
-.logout-btn {
+.navbar .logout-btn {
   background-color: #e74c3c;
-  color: white;
+  color: #ffffff;
   padding: 0.5rem 1rem;
   border-radius: 4px;
+  font-weight: 600;
+  border: none;
   transition: background-color 0.2s;
 }
 
-.logout-btn:hover {
+.navbar .logout-btn:hover {
   background-color: #c0392b;
+  color: #ffffff;
 }

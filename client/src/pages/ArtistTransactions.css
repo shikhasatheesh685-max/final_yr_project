@@ -1,25 +1,46 @@
+/* Artist dashboard – aligned with admin UI */
 .artist-transactions-container {
-  padding: 20px;
+  padding: 2rem;
+  min-height: 100vh;
+  background: #f5f7f6;
+}
+
+.artist-transactions-container h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a3c34;
+  margin-bottom: 1.5rem;
 }
 
 .transactions-table {
   width: 100%;
   border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .transactions-table th,
 .transactions-table td {
-  border: 1px solid #e1e1e1;
-  padding: 8px 12px;
+  border-bottom: 1px solid #e8ebe9;
+  padding: 0.75rem 1rem;
   text-align: left;
+  font-size: 0.9rem;
 }
 
 .transactions-table th {
-  background: #f8f8f8;
+  background: #f5f7f6;
+  font-weight: 600;
+  color: #1a3c34;
+}
+
+.transactions-table tr:hover {
+  background: #f5f7f6;
 }
 
 .message.error {
-  color: #b00020;
-  margin-bottom: 12px;
+  color: #c62828;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
 }
-

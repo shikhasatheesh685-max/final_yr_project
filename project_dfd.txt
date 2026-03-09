@@ -1,0 +1,337 @@
+================================================================================
+ART GALLERY SHOWCASE - DATA FLOW DIAGRAMS (DFD)
+================================================================================
+This file contains Mermaid diagram code for DFD Level 0, Level 1, and Level 1.1
+through 1.4 (by module/role per project_spec.txt). Copy each code block into
+Mermaid-supported tools (e.g. Mermaid Live Editor, GitHub, Notion, Cursor).
+
+DFD Notation in Mermaid:
+  - External entities: ( ) rounded rectangles
+  - Processes: ([ ]) stadium shape
+  - Data stores: [[ ]] cylinder/subroutine shape
+  - Data flows: arrows with labels
+
+================================================================================
+DFD LEVEL 0 - CONTEXT DIAGRAM (ENTIRE PROJECT)
+================================================================================
+Single process representing the whole Art Gallery Showcase system; external
+entities are Artist, Visitor, and Admin; main flows and central data store.
+
+--- Mermaid code (Level 0) ---
+
+flowchart LR
+  subgraph External Entities
+    A[(Artist)]
+    V[(Visitor/Customer)]
+    AD[(Admin)]
+  end
+
+  S([Art Gallery Showcase System])
+
+  subgraph Data Store
+    DB[(Database)]
+  end
+
+  A -->|Register/Login, Upload/Edit Artworks, View Sales| S
+  S -->|Auth Response, Artwork Status, Sales Data| A
+
+  V -->|Browse, Register/Login, Place Orders, View History, Place Bids| S
+  S -->|Artworks, Order Confirmation, Auction Updates| V
+
+  AD -->|Login, Manage Users/Artworks/Orders, Approve Artists, Categories, Reports| S
+  S -->|Dashboard Data, Reports, User/Order Lists| AD
+
+  S <-->|Read/Write Users, Artworks, Orders, Auctions, Bids, Categories| DB
+
+--- End Level 0 ---
+
+
+================================================================================
+DFD LEVEL 1 - SYSTEM DECOMPOSITION (ENTIRE PROJECT)
+================================================================================
+Level 1 breaks the system into major processes: Authentication, Artist Module,
+Visitor/Customer Module, Admin Module, and Auction Module, with shared
+data stores.
+
+--- Mermaid code (Level 1) ---
+
+flowchart TB
+  subgraph External
+    A[(Artist)]
+    V[(Visitor/Customer)]
+    AD[(Admin)]
+  end
+
+  subgraph Processes
+    P1([1.0 Authentication])
+    P2([2.0 Artist Module])
+    P3([3.0 Visitor/Customer Module])
+    P4([4.0 Admin Module])
+    P5([5.0 Auction Module])
+  end
+
+  subgraph Data Stores
+    D1[[Users]]
+    D2[[Artworks]]
+    D3[[Orders]]
+    D4[[Auctions]]
+    D5[[Bids]]
+    D6[[Categories]]
+    D7[[Transactions]]
+  end
+
+  A -->|Register/Login| P1
+  P1 -->|Token, User| A
+  P1 <--> D1
+
+  A -->|Upload/Edit/Delete Artwork, View Sales| P2
+  P2 -->|Artwork Status, Sales Data| A
+  P2 <--> D2
+  P2 --> D7
+  P2 <--> D1
+
+  V -->|Register/Login| P1
+  V -->|Browse, Filter, Place Order, View Orders| P3
+  P3 -->|Artworks, Order Status| V
+  P3 <--> D2
+  P3 <--> D3
+  P3 <--> D1
+
+  AD -->|Login| P1
+  AD -->|Manage Users, Artworks, Orders, Categories, Reports| P4
+  P4 -->|Dashboard, Reports, Lists| AD
+  P4 <--> D1
+  P4 <--> D2
+  P4 <--> D3
+  P4 <--> D6
+  P4 --> D7
+
+  A -->|Create Auction, View Bids, Finalize| P5
+  V -->|Place Bid, View Auctions| P5
+  P5 -->|Auction/Bid Status| A
+  P5 -->|Auction Results, Outbid Notifications| V
+  P5 <--> D4
+  P5 <--> D5
+  P5 <--> D2
+  P5 --> D7
+
+--- End Level 1 ---
+
+
+================================================================================
+DFD LEVEL 1.1 - ARTIST MODULE
+================================================================================
+Per project_spec: Register/Login, Upload artworks, Edit/Delete artworks,
+View sales status. Data flows between Artist, sub-processes, and data stores.
+
+--- Mermaid code (Level 1.1) ---
+
+flowchart TB
+  A[(Artist)]
+
+  subgraph Artist Module 1.1
+    P1([1.1.1 Register/Login])
+    P2([1.1.2 Upload Artwork])
+    P3([1.1.3 Edit/Delete Artwork])
+    P4([1.1.4 View Sales Status])
+  end
+
+  D1[[Users]]
+  D2[[Artworks]]
+  D7[[Transactions]]
+
+  A -->|Credentials| P1
+  P1 -->|Token, Profile| A
+  P1 <--> D1
+
+  A -->|Title, Description, Price, Image| P2
+  P2 -->|Artwork Created| A
+  P2 --> D2
+  P2 <--> D1
+
+  A -->|Edit/Delete Request| P3
+  P3 -->|Confirmation| A
+  P3 <--> D2
+
+  A -->|Sales Query| P4
+  P4 -->|Sales Data, Transaction List| A
+  P4 --> D7
+  P4 --> D2
+
+--- End Level 1.1 ---
+
+
+================================================================================
+DFD LEVEL 1.2 - VISITOR/CUSTOMER MODULE
+================================================================================
+Per project_spec: View artworks without login, Register/Login to purchase,
+Browse by category/artist, Place orders, View order history. Also place bids
+(auction interaction).
+
+--- Mermaid code (Level 1.2) ---
+
+flowchart TB
+  V[(Visitor/Customer)]
+
+  subgraph Visitor Module 1.2
+    P1([1.2.1 Register/Login])
+    P2([1.2.2 Browse Artworks])
+    P3([1.2.3 Place Order])
+    P4([1.2.4 View Order History])
+    P5([1.2.5 Place Bid])
+  end
+
+  D1[[Users]]
+  D2[[Artworks]]
+  D3[[Orders]]
+  D6[[Categories]]
+  D4[[Auctions]]
+  D5[[Bids]]
+
+  V -->|Credentials| P1
+  P1 -->|Token, Profile| V
+  P1 <--> D1
+
+  V -->|Category/Artist Filter, Search| P2
+  P2 -->|Artwork List, Details| V
+  P2 --> D2
+  P2 --> D6
+
+  V -->|Artwork Selection, Payment Info| P3
+  P3 -->|Order Confirmation| V
+  P3 --> D3
+  P3 <--> D2
+  P3 <--> D1
+
+  V -->|Order History Request| P4
+  P4 -->|Order List, Status| V
+  P4 --> D3
+
+  V -->|Bid Amount, Auction ID| P5
+  P5 -->|Bid Confirmation, Outbid Notice| V
+  P5 --> D5
+  P5 <--> D4
+
+--- End Level 1.2 ---
+
+
+================================================================================
+DFD LEVEL 1.3 - ADMIN MODULE
+================================================================================
+Per project_spec: Login to admin dashboard, Approve/Manage artist accounts,
+Add/Edit/Delete artworks, View all orders and sales reports, Manage
+categories and featured artworks.
+
+--- Mermaid code (Level 1.3) ---
+
+flowchart TB
+  AD[(Admin)]
+
+  subgraph Admin Module 1.3
+    P1([1.3.1 Admin Login])
+    P2([1.3.2 Manage Artist Accounts])
+    P3([1.3.3 Manage Artworks])
+    P4([1.3.4 View Orders & Sales])
+    P5([1.3.5 Manage Categories & Content])
+  end
+
+  D1[[Users]]
+  D2[[Artworks]]
+  D3[[Orders]]
+  D6[[Categories]]
+  D7[[Transactions]]
+
+  AD -->|Admin Credentials| P1
+  P1 -->|Token, Dashboard Access| AD
+  P1 <--> D1
+
+  AD -->|Approve/Reject/Suspend Artist| P2
+  P2 -->|User List, Approval Status| AD
+  P2 <--> D1
+
+  AD -->|Add/Edit/Delete Artwork| P3
+  P3 -->|Artwork List, Confirmation| AD
+  P3 <--> D2
+
+  AD -->|Orders & Sales Query| P4
+  P4 -->|Order List, Sales Reports, Transactions| AD
+  P4 --> D3
+  P4 --> D7
+
+  AD -->|Add/Edit/Delete Category, Featured Artworks| P5
+  P5 -->|Category List, Settings| AD
+  P5 <--> D6
+  P5 <--> D2
+
+--- End Level 1.3 ---
+
+
+================================================================================
+DFD LEVEL 1.4 - AUCTION MODULE
+================================================================================
+Per project_spec: Create auction listings, Set base price and duration,
+Allow multiple users to place bids, View all bids, Finalize auction and
+select highest bidder, Mark artwork as sold after completion.
+
+--- Mermaid code (Level 1.4) ---
+
+flowchart TB
+  A[(Artist)]
+  V[(Visitor/Customer)]
+
+  subgraph Auction Module 1.4
+    P1([1.4.1 Create Auction])
+    P2([1.4.2 Place Bid])
+    P3([1.4.3 View Bids])
+    P4([1.4.4 Finalize Auction])
+    P5([1.4.5 Mark Artwork Sold])
+  end
+
+  D2[[Artworks]]
+  D4[[Auctions]]
+  D5[[Bids]]
+  D1[[Users]]
+  D7[[Transactions]]
+
+  A -->|Artwork, Base Price, Duration| P1
+  P1 -->|Auction Created| A
+  P1 --> D4
+  P1 <--> D2
+
+  V -->|Bid Amount| P2
+  P2 -->|Bid Accepted/Rejected| V
+  P2 --> D5
+  P2 <--> D4
+  P2 <--> D1
+
+  A -->|View Bids Request| P3
+  P3 -->|Bid List, Highest Bidder| A
+  P3 --> D5
+  P3 --> D4
+
+  A -->|Finalize Request| P4
+  P4 -->|Winner, Sale Summary| A
+  P4 -->|Won/Lost Notification| V
+  P4 <--> D4
+  P4 <--> D5
+  P4 --> D7
+
+  P4 -->|Mark Sold| P5
+  P5 --> D2
+  P5 --> D7
+
+--- End Level 1.4 ---
+
+
+================================================================================
+USAGE NOTES
+================================================================================
+- To render: paste a single "--- Mermaid code ... ---" block into
+  https://mermaid.live or any Mermaid-capable viewer.
+- Level 0 and Level 1 use the full system; Level 1.1–1.4 zoom into each
+  role/module from project_spec.txt (Artist, Visitor/Customer, Admin, Auction).
+- Data stores align with server models: User, Artwork, Order, Auction, Bid,
+  Category, Transaction, Setting (Setting omitted in DFD for brevity; can be
+  included under Admin "Manage Categories & Content" if needed).
+
+================================================================================

@@ -1,83 +1,87 @@
+/* Artist dashboard – aligned with admin UI */
 .my-artworks-container {
   width: 100%;
+  min-height: 100vh;
+  background: #f5f7f6;
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   flex-wrap: wrap;
   gap: 1rem;
 }
 
 .page-header h1 {
-  font-size: 2.5rem;
-  color: #2c3e50;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a3c34;
 }
 
 .upload-btn {
-  background-color: #3498db;
+  background: linear-gradient(135deg, #1a3c34 0%, #2e5a4e 100%);
   color: white;
-  padding: 0.8rem 1.5rem;
-  border-radius: 4px;
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
   font-weight: 500;
-  transition: background-color 0.2s;
+  transition: opacity 0.2s;
 }
 
 .upload-btn:hover {
-  background-color: #2980b9;
+  opacity: 0.9;
 }
 
 .message {
   padding: 1rem;
-  border-radius: 4px;
+  border-radius: 8px;
   margin-bottom: 1.5rem;
 }
 
 .message.success {
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
 }
 
 .message.error {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
+  background: #ffebee;
+  color: #c62828;
+  border: 1px solid #ffcdd2;
 }
 
 .no-artworks {
   text-align: center;
   padding: 4rem 2rem;
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .no-artworks p {
-  font-size: 1.2rem;
-  color: #7f8c8d;
+  font-size: 1rem;
+  color: #5f6d64;
   margin-bottom: 1.5rem;
 }
 
 .artworks-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
 }
 
 .artwork-item {
   background: white;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .artwork-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .artwork-image {
@@ -85,7 +89,7 @@
   width: 100%;
   height: 200px;
   overflow: hidden;
-  background-color: #ecf0f1;
+  background: #f0f2f1;
 }
 
 .artwork-image img {
@@ -94,13 +98,14 @@
   object-fit: cover;
 }
 
-.placeholder-image {
+.my-artworks-container .placeholder-image {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #95a5a6;
+  color: #5f6d64;
+  font-size: 0.9rem;
 }
 
 .featured-badge,
@@ -125,32 +130,33 @@
 }
 
 .artwork-details {
-  padding: 1.5rem;
+  padding: 1.25rem 1.5rem;
 }
 
 .artwork-details h3 {
-  font-size: 1.3rem;
-  color: #2c3e50;
-  margin-bottom: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1a3c34;
+  margin-bottom: 0.35rem;
 }
 
-.category {
-  color: #3498db;
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
+.my-artworks-container .category {
+  color: #2e5a4e;
+  font-size: 0.875rem;
+  margin-bottom: 0.35rem;
   font-weight: 500;
 }
 
-.price {
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: #27ae60;
+.my-artworks-container .price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a3c34;
   margin-bottom: 0.5rem;
 }
 
 .status {
-  color: #7f8c8d;
-  font-size: 0.9rem;
+  color: #5f6d64;
+  font-size: 0.875rem;
   margin-bottom: 1rem;
 }
 
@@ -163,36 +169,37 @@
 .view-btn,
 .edit-btn,
 .delete-btn {
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  transition: all 0.2s;
+  padding: 0.45rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: opacity 0.2s;
   text-align: center;
 }
 
 .view-btn {
-  background-color: #3498db;
+  background: linear-gradient(135deg, #1a3c34 0%, #2e5a4e 100%);
   color: white;
 }
 
 .view-btn:hover {
-  background-color: #2980b9;
+  opacity: 0.9;
 }
 
 .edit-btn {
-  background-color: #f39c12;
+  background: #f57c00;
   color: white;
 }
 
 .edit-btn:hover {
-  background-color: #e67e22;
+  opacity: 0.9;
 }
 
 .delete-btn {
-  background-color: #e74c3c;
+  background: #ef5350;
   color: white;
 }
 
 .delete-btn:hover {
-  background-color: #c0392b;
+  opacity: 0.9;
 }

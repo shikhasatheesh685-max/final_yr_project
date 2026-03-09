@@ -76,7 +76,8 @@ const Home = () => {
         <p>{siteContent.tagline}</p>
       </div>
 
-      <div className="filters-section">
+      <div className="home-content">
+        <div className="filters-section">
         <div className="filter-group">
           <label>Category:</label>
           <select
@@ -155,6 +156,7 @@ const Home = () => {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
@@ -31,12 +31,18 @@ import CreateAuction from './pages/CreateAuction';
 import NotFound from './pages/NotFound';
 import './App.css';
 
-function App() {
+function AppContent() {
+  const location = useLocation();
+  
+  // Hide navbar on admin pages and auth pages
+  const hideNavbar = location.pathname.startsWith('/admin') || 
+                     location.pathname === '/login' || 
+                     location.pathname === '/register';
+
   return (
-    <AuthProvider>
-      <div className="app">
-        <Navbar />
-        <main className="main-content">
+    <div className="app">
+      {!hideNavbar && <Navbar />}
+      <main className={`main-content ${hideNavbar ? 'no-navbar' : ''}`}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/artwork/:id" element={<ArtworkDetail />} />
@@ -201,8 +207,15 @@ function App() {
             {/* 404 Route */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </main>
-      </div>
+      </main>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
     </AuthProvider>
   );
 }
