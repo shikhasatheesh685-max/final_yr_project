@@ -7,7 +7,7 @@ import './Home.css';
 const Home = () => {
   const [artworks, setArtworks] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [siteContent, setSiteContent] = useState({ siteName: 'Art Gallery Showcase', tagline: 'Discover beautiful artworks from talented artists' });
+  const [siteContent, setSiteContent] = useState({ siteName: 'SCULPT GALLERY SHOWCASE', tagline: 'Discover beautiful artworks from talented artists' });
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     category: '',
@@ -17,7 +17,7 @@ const Home = () => {
 
   useEffect(() => {
     settingsAPI.getPublic().then((r) => {
-      setSiteContent({ siteName: r.data.siteName || 'Art Gallery Showcase', tagline: r.data.tagline || 'Discover beautiful artworks from talented artists' });
+      setSiteContent({ siteName: r.data.siteName || 'SCULPT GALLERY SHOWCASE', tagline: r.data.tagline || 'Discover beautiful artworks from talented artists' });
     }).catch(() => {});
   }, []);
 
