@@ -13,6 +13,7 @@ const UploadArtwork = () => {
   });
   const [categories, setCategories] = useState([]);
   const [image, setImage] = useState(null);
+  const [imageURL, setImageURL] = useState('');
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -37,11 +38,23 @@ const UploadArtwork = () => {
     const file = e.target.files[0];
     if (file) {
       setImage(file);
+      setImageURL('');
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImageURLChange = (e) => {
+    const url = e.target.value.trim();
+    setImageURL(url);
+    if (url) {
+      setImage(null);
+      setImagePreview(url);
+    } else {
+      setImagePreview(null);
     }
   };
 
@@ -76,13 +89,14 @@ const UploadArtwork = () => {
       return;
     }
 
-    if (!image) {
-      setError('Please select an image');
+    const useURL = imageURL && (imageURL.startsWith('http://') || imageURL.startsWith('https://'));
+    if (!image && !useURL) {
+      setError('Please upload an image or paste an image URL');
       return;
     }
 
-    // Check file size (5MB limit)
-    if (image.size > 5 * 1024 * 1024) {
+    // Check file size (5MB limit) when uploading file
+    if (image && image.size > 5 * 1024 * 1024) {
       setError('Image size must be less than 5MB');
       return;
     }
@@ -94,7 +108,11 @@ const UploadArtwork = () => {
       uploadData.append('description', formData.description);
       uploadData.append('price', formData.price);
       uploadData.append('category', formData.category);
-      uploadData.append('image', image);
+      if (image) {
+        uploadData.append('image', image);
+      } else {
+        uploadData.append('imageURL', imageURL);
+      }
 
       await artworksAPI.create(uploadData);
       setMessage('Artwork uploaded successfully!');
@@ -107,6 +125,7 @@ const UploadArtwork = () => {
         category: '',
       });
       setImage(null);
+      setImageURL('');
       setImagePreview(null);
       e.target.reset();
 
@@ -199,11 +218,18 @@ const UploadArtwork = () => {
               type="file"
               accept="image/*"
               onChange={handleImageChange}
-              required
+            />
+            <p className="form-hint">or paste an image URL</p>
+            <input
+              type="url"
+              placeholder="https://example.com/image.jpg"
+              value={imageURL}
+              onChange={handleImageURLChange}
+              className="image-url-input"
             />
             {imagePreview && (
               <div className="image-preview">
-                <img src={imagePreview} alt="Preview" />
+                <img src={imagePreview} alt="Preview" onError={(e) => { e.target.style.display = 'none'; }} />
               </div>
             )}
           </div>

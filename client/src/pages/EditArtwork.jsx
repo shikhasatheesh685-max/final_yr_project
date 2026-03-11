@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { artworksAPI, categoriesAPI } from '../utils/api';
+import { artworksAPI, categoriesAPI, getArtworkImageSrc } from '../utils/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import './UploadArtwork.css';
 
@@ -16,6 +16,7 @@ const EditArtwork = () => {
     isAvailable: true,
   });
   const [image, setImage] = useState(null);
+  const [imageURL, setImageURL] = useState('');
   const [imagePreview, setImagePreview] = useState(null);
   const [currentImageUrl, setCurrentImageUrl] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -67,11 +68,23 @@ const EditArtwork = () => {
     const file = e.target.files[0];
     if (file) {
       setImage(file);
+      setImageURL('');
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImageURLChange = (e) => {
+    const url = e.target.value.trim();
+    setImageURL(url);
+    if (url) {
+      setImage(null);
+      setImagePreview(url);
+    } else {
+      setImagePreview(null);
     }
   };
 
@@ -111,6 +124,8 @@ const EditArtwork = () => {
       return;
     }
 
+    const useNewURL = imageURL && (imageURL.startsWith('http://') || imageURL.startsWith('https://'));
+
     try {
       setLoading(true);
       const uploadData = new FormData();
@@ -121,6 +136,8 @@ const EditArtwork = () => {
       uploadData.append('isAvailable', formData.isAvailable);
       if (image) {
         uploadData.append('image', image);
+      } else if (useNewURL) {
+        uploadData.append('imageURL', imageURL);
       }
 
       await artworksAPI.update(id, uploadData);
@@ -224,20 +241,28 @@ const EditArtwork = () => {
           </div>
 
           <div className="form-group">
-            <label>Image {image ? '(New)' : '(Current)'}</label>
+            <label>Image {image || imageURL ? '(New)' : '(Current)'}</label>
             <input
               type="file"
               accept="image/*"
               onChange={handleImageChange}
             />
+            <p className="form-hint">or paste an image URL to replace</p>
+            <input
+              type="url"
+              placeholder="https://example.com/image.jpg"
+              value={imageURL}
+              onChange={handleImageURLChange}
+              className="image-url-input"
+            />
             {imagePreview ? (
               <div className="image-preview">
-                <img src={imagePreview} alt="Preview" />
+                <img src={imagePreview} alt="Preview" onError={(e) => { e.target.style.display = 'none'; }} />
               </div>
             ) : currentImageUrl ? (
               <div className="image-preview">
                 <img
-                  src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${currentImageUrl}`}
+                  src={getArtworkImageSrc(currentImageUrl)}
                   alt="Current"
                 />
                 <p className="preview-note">Current image (leave empty to keep)</p>

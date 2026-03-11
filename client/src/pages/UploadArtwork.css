@@ -43,6 +43,7 @@
 
 .form-group input[type="text"],
 .form-group input[type="number"],
+.form-group input[type="url"],
 .form-group input[type="file"],
 .form-group textarea {
   width: 100%;
@@ -51,6 +52,16 @@
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.2s;
+}
+
+.form-hint {
+  margin: 0.35rem 0 0.25rem;
+  font-size: 0.85rem;
+  color: #5f6d64;
+}
+
+.image-url-input {
+  margin-top: 0.5rem;
 }
 
 .form-group input:focus,

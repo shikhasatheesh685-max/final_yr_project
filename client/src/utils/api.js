@@ -1,6 +1,14 @@
 import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
+
+/** Use for artwork images: full URLs (e.g. pasted image URL) as-is; relative paths (e.g. /uploads/...) get API base prepended. */
+export function getArtworkImageSrc(imageURL) {
+  if (!imageURL) return '';
+  if (imageURL.startsWith('http://') || imageURL.startsWith('https://')) return imageURL;
+  return API_BASE + imageURL;
+}
 
 // Create axios instance
 const api = axios.create({

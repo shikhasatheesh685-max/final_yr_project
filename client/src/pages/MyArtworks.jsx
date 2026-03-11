@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { artworksAPI } from '../utils/api';
+import { artworksAPI, getArtworkImageSrc } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 import './MyArtworks.css';
@@ -80,7 +80,7 @@ const MyArtworks = () => {
               <div className="artwork-image">
                 {artwork.imageURL ? (
                   <img
-                    src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${artwork.imageURL}`}
+                    src={getArtworkImageSrc(artwork.imageURL)}
                     alt={artwork.title}
                   />
                 ) : (

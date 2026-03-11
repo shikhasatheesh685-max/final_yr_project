@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { auctionsAPI } from '../utils/api';
+import { auctionsAPI, getArtworkImageSrc } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 import './AuctionDetail.css';
-
-const API_BASE = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
 
 const AuctionDetail = () => {
   const { id } = useParams();
@@ -84,7 +82,7 @@ const AuctionDetail = () => {
       <div className="auction-detail-layout">
         <div className="auction-image-section">
           {art?.imageURL ? (
-            <img src={`${API_BASE}${art.imageURL}`} alt={art.title} />
+            <img src={getArtworkImageSrc(art.imageURL)} alt={art.title} />
           ) : (
             <div className="placeholder">No Image</div>
           )}

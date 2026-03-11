@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ordersAPI } from '../utils/api';
+import { ordersAPI, getArtworkImageSrc } from '../utils/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import './ArtistSales.css';
 
@@ -90,7 +90,7 @@ const ArtistSales = () => {
                       <div className="artwork-info-cell">
                         {order.artworkID?.imageURL && (
                           <img
-                            src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${order.artworkID.imageURL}`}
+                            src={getArtworkImageSrc(order.artworkID.imageURL)}
                             alt={order.artworkID.title}
                             className="order-artwork-image"
                           />

@@ -52,15 +52,20 @@ router.get('/:id', async (req, res) => {
 // @access  Private (Approved Artist or Admin)
 router.post('/', protect, authorize('artist', 'admin'), requireApprovedArtist, upload.single('image'), async (req, res) => {
   try {
-    const { title, description, price, category, medium } = req.body;
+    const { title, description, price, category, medium, imageURL: imageURLBody } = req.body;
 
     // Validation
     if (!title || !description || !price || !category) {
       return res.status(400).json({ message: 'Please provide title, description, price, and category' });
     }
 
-    if (!req.file) {
-      return res.status(400).json({ message: 'Please upload an image' });
+    const imageURL = (imageURLBody && typeof imageURLBody === 'string' && imageURLBody.trim().startsWith('http'))
+      ? imageURLBody.trim()
+      : req.file
+        ? `/uploads/${req.file.filename}`
+        : null;
+    if (!imageURL) {
+      return res.status(400).json({ message: 'Please upload an image or provide an image URL' });
     }
 
     // Create artwork
@@ -70,7 +75,7 @@ router.post('/', protect, authorize('artist', 'admin'), requireApprovedArtist, u
       price: parseFloat(price),
       category,
       medium: medium || '',
-      imageURL: `/uploads/${req.file.filename}`,
+      imageURL,
       artistID: req.user._id,
     });
 
@@ -113,9 +118,12 @@ router.put('/:id', protect, requireApprovedArtist, upload.single('image'), async
       artwork.isFeatured = isFeatured === 'true' || isFeatured === true;
     }
     
-    // Update image if new one is uploaded
+    // Update image if new file uploaded or new image URL provided
+    const imageURLBody = req.body.imageURL;
     if (req.file) {
       artwork.imageURL = `/uploads/${req.file.filename}`;
+    } else if (imageURLBody && typeof imageURLBody === 'string' && imageURLBody.trim().startsWith('http')) {
+      artwork.imageURL = imageURLBody.trim();
     }
 
     await artwork.save();

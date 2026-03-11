@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { auctionsAPI } from '../utils/api';
+import { auctionsAPI, getArtworkImageSrc } from '../utils/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import './Auctions.css';
-
-const API_BASE = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
 
 const Auctions = () => {
   const [auctions, setAuctions] = useState([]);
@@ -36,7 +34,7 @@ const Auctions = () => {
               <Link key={a._id} to={`/auction/${a._id}`} className="auction-card">
                 <div className="auction-image">
                   {art?.imageURL ? (
-                    <img src={`${API_BASE}${art.imageURL}`} alt={art.title} />
+                    <img src={getArtworkImageSrc(art.imageURL)} alt={art.title} />
                   ) : (
                     <div className="placeholder">No Image</div>
                   )}

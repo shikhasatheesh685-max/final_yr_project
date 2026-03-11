@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { artworksAPI, ordersAPI } from '../utils/api';
+import { artworksAPI, ordersAPI, getArtworkImageSrc } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 import './ArtworkDetail.css';
@@ -81,7 +81,7 @@ const ArtworkDetail = () => {
         <div className="artwork-image-section">
           {artwork.imageURL ? (
             <img
-              src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${artwork.imageURL}`}
+              src={getArtworkImageSrc(artwork.imageURL)}
               alt={artwork.title}
             />
           ) : (
