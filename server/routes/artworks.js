@@ -6,14 +6,13 @@ const upload = require('../middleware/upload');
 const router = express.Router();
 
 // @route   GET /api/artworks
-// @desc    Get all artworks (public - no auth required)
+// @desc    Get all artworks (public - no auth required; only active)
 // @access  Public
 router.get('/', async (req, res) => {
   try {
     const { category, artist, featured, available } = req.query;
-    
-    // Build filter object
-    const filter = {};
+
+    const filter = { isActive: true };
     if (category) filter.category = category;
     if (artist) filter.artistID = artist;
     if (featured === 'true') filter.isFeatured = true;
@@ -29,15 +28,29 @@ router.get('/', async (req, res) => {
   }
 });
 
+// @route   GET /api/artworks/admin/all
+// @desc    Get all artworks including inactive (admin only)
+// @access  Private (Admin)
+router.get('/admin/all', protect, authorize('admin'), async (req, res) => {
+  try {
+    const artworks = await Artwork.find({})
+      .populate('artistID', 'name email')
+      .sort({ createdAt: -1 });
+    res.json(artworks);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // @route   GET /api/artworks/:id
-// @desc    Get single artwork by ID
+// @desc    Get single artwork by ID (returns 404 if inactive)
 // @access  Public
 router.get('/:id', async (req, res) => {
   try {
     const artwork = await Artwork.findById(req.params.id)
       .populate('artistID', 'name email');
 
-    if (!artwork) {
+    if (!artwork || !artwork.isActive) {
       return res.status(404).json({ message: 'Artwork not found' });
     }
 
@@ -113,9 +126,12 @@ router.put('/:id', protect, requireApprovedArtist, upload.single('image'), async
     if (category) artwork.category = category;
     if (medium !== undefined) artwork.medium = medium;
     if (isAvailable !== undefined) artwork.isAvailable = isAvailable === 'true' || isAvailable === true;
-    // Only admin can set featured status
+    // Only admin can set featured and active status
     if (isFeatured !== undefined && req.user.role === 'admin') {
       artwork.isFeatured = isFeatured === 'true' || isFeatured === true;
+    }
+    if (req.body.isActive !== undefined && req.user.role === 'admin') {
+      artwork.isActive = req.body.isActive === 'true' || req.body.isActive === true;
     }
     
     // Update image if new file uploaded or new image URL provided
@@ -162,11 +178,14 @@ router.delete('/:id', protect, requireApprovedArtist, async (req, res) => {
 });
 
 // @route   GET /api/artworks/artist/:artistId
-// @desc    Get all artworks by a specific artist
+// @desc    Get all artworks by a specific artist (active only)
 // @access  Public
 router.get('/artist/:artistId', async (req, res) => {
   try {
-    const artworks = await Artwork.find({ artistID: req.params.artistId })
+    const artworks = await Artwork.find({
+      artistID: req.params.artistId,
+      isActive: true,
+    })
       .populate('artistID', 'name email')
       .sort({ createdAt: -1 });
 
@@ -177,11 +196,11 @@ router.get('/artist/:artistId', async (req, res) => {
 });
 
 // @route   GET /api/artworks/categories/list
-// @desc    Get all unique categories
+// @desc    Get all unique categories (from active artworks only)
 // @access  Public
 router.get('/categories/list', async (req, res) => {
   try {
-    const categories = await Artwork.distinct('category');
+    const categories = await Artwork.distinct('category', { isActive: true });
     res.json(categories);
   } catch (error) {
     res.status(500).json({ message: error.message });

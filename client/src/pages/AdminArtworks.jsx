@@ -16,7 +16,7 @@ const AdminArtworks = () => {
   const fetchArtworks = async () => {
     try {
       setLoading(true);
-      const response = await artworksAPI.getAll();
+      const response = await artworksAPI.getAllForAdmin();
       setArtworks(response.data);
     } catch (error) {
       setMessage('Failed to load artworks');
@@ -48,6 +48,19 @@ const AdminArtworks = () => {
       formData.append('isFeatured', !artwork.isFeatured);
       await artworksAPI.update(artwork._id, formData);
       setMessage('Artwork updated successfully');
+      fetchArtworks();
+    } catch (error) {
+      setMessage(error.response?.data?.message || 'Failed to update artwork');
+    }
+  };
+
+  const handleToggleActive = async (artwork) => {
+    try {
+      setMessage('');
+      const formData = new FormData();
+      formData.append('isActive', !artwork.isActive);
+      await artworksAPI.update(artwork._id, formData);
+      setMessage(artwork.isActive ? 'Artwork deactivated' : 'Artwork activated');
       fetchArtworks();
     } catch (error) {
       setMessage(error.response?.data?.message || 'Failed to update artwork');
@@ -89,6 +102,9 @@ const AdminArtworks = () => {
                 {!artwork.isAvailable && (
                   <span className="sold-badge">Sold</span>
                 )}
+                {artwork.isActive === false && (
+                  <span className="disabled-badge">Disabled</span>
+                )}
               </div>
               <div className="artwork-info">
                 <h3>{artwork.title}</h3>
@@ -100,12 +116,23 @@ const AdminArtworks = () => {
                 <p className="category">{artwork.category}</p>
                 <p className="price">${artwork.price}</p>
                 <div className="artwork-actions">
-                  <Link to={`/artwork/${artwork._id}`} className="view-btn">
-                    View
-                  </Link>
+                  {artwork.isActive && (
+                    <Link to={`/artwork/${artwork._id}`} className="view-btn">
+                      View
+                    </Link>
+                  )}
+                  <button
+                    onClick={() => handleToggleActive(artwork)}
+                    className={artwork.isActive ? 'deactivate-btn' : 'activate-btn'}
+                    title={artwork.isActive ? 'Hide from gallery and all public views' : 'Show again in gallery'}
+                  >
+                    {artwork.isActive ? 'Deactivate' : 'Activate'}
+                  </button>
                   <button
                     onClick={() => handleToggleFeatured(artwork)}
                     className={`feature-btn ${artwork.isFeatured ? 'active' : ''}`}
+                    disabled={!artwork.isActive}
+                    title={!artwork.isActive ? 'Activate artwork first' : ''}
                   >
                     {artwork.isFeatured ? 'Unfeature' : 'Feature'}
                   </button>

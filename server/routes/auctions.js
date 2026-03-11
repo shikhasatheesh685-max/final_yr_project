@@ -8,7 +8,7 @@ const { protect, authorize, requireApprovedArtist } = require('../middleware/aut
 const router = express.Router();
 
 // @route   GET /api/auctions
-// @desc    List auctions (active by default; optional status filter)
+// @desc    List auctions (active by default; optional status filter). Hides auctions whose artwork is disabled.
 // @access  Public
 router.get('/', async (req, res) => {
   try {
@@ -19,14 +19,15 @@ router.get('/', async (req, res) => {
       .populate('createdBy', 'name')
       .populate('winningBidID')
       .sort({ endTime: 1 });
-    res.json(auctions);
+    const filtered = auctions.filter((a) => a.artworkID && a.artworkID.isActive !== false);
+    res.json(filtered);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
 // @route   GET /api/auctions/my
-// @desc    My auctions (artist/owner) - must be before :id
+// @desc    My auctions (artist/owner) - must be before :id. Hides auctions whose artwork is disabled.
 // @access  Private (Artist or Admin)
 router.get('/my', protect, authorize('artist', 'admin'), requireApprovedArtist, async (req, res) => {
   try {
@@ -35,14 +36,15 @@ router.get('/my', protect, authorize('artist', 'admin'), requireApprovedArtist, 
       .populate('artworkID')
       .populate('winningBidID')
       .sort({ createdAt: -1 });
-    res.json(auctions);
+    const filtered = auctions.filter((a) => a.artworkID && a.artworkID.isActive !== false);
+    res.json(filtered);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
 // @route   GET /api/auctions/:id
-// @desc    Get single auction with bids
+// @desc    Get single auction with bids. Returns 404 if artwork is disabled.
 // @access  Public
 router.get('/:id', async (req, res) => {
   try {
@@ -51,6 +53,9 @@ router.get('/:id', async (req, res) => {
       .populate('createdBy', 'name email')
       .populate('winningBidID');
     if (!auction) return res.status(404).json({ message: 'Auction not found' });
+    if (!auction.artworkID || auction.artworkID.isActive === false) {
+      return res.status(404).json({ message: 'Auction not found' });
+    }
     const bids = await Bid.find({ auctionID: auction._id })
       .populate('userID', 'name email')
       .sort({ amount: -1 });

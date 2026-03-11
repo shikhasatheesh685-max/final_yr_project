@@ -57,6 +57,7 @@ export const authAPI = {
 // Artworks API
 export const artworksAPI = {
   getAll: (params) => api.get('/artworks', { params }),
+  getAllForAdmin: () => api.get('/artworks/admin/all'),
   getById: (id) => api.get(`/artworks/${id}`),
   create: (formData) => api.post('/artworks', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
